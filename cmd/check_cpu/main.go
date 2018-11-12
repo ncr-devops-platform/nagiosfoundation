@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/jkerry/nagiosFoundation/internal/app/nagiosFoundation"
+	"github.com/jkerry/nagiosfoundation/lib/app/nagiosfoundation"
 )
 
 func main() {
-	nagiosFoundation.CheckCPU()
+	nagiosfoundation.CheckCPU()
 }

@@ -1,4 +1,4 @@
-package nagiosFormatters
+package nagiosformatters
 
 import (
 	"fmt"

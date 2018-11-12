@@ -1,9 +1,9 @@
-package main
+package checkavailablememory
 
 import (
-	"github.com/jkerry/nagiosFoundation/internal/app/nagiosFoundation"
+	"github.com/jkerry/nagiosfoundation/lib/app/nagiosfoundation"
 )
 
 func main() {
-	nagiosFoundation.CheckAvailableMemory()
+	nagiosfoundation.CheckAvailableMemory()
 }

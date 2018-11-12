@@ -1,4 +1,4 @@
-package nagiosFoundation
+package nagiosfoundation
 
 import (
 	"flag"

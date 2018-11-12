@@ -1,4 +1,4 @@
-package perfCounters
+package perfcounters
 
 import (
 	"errors"
@@ -34,12 +34,12 @@ func ReadPerformanceCounter(counter string, pollingAttempts int, pollingDelay in
 
 	ret = win.PdhAddEnglishCounter(queryHandle, counter, 0, &counterHandle)
 	if ret != win.ERROR_SUCCESS {
-		return perfcounter, errors.New(fmt.Sprintf("Unable to add process counter. Error code is %x\n", ret))
+		return perfcounter, fmt.Errorf("unable to add process counter. Error code is %x", ret)
 	}
 
 	ret = win.PdhCollectQueryData(queryHandle)
 	if ret != win.ERROR_SUCCESS {
-		return perfcounter, errors.New(fmt.Sprintf("Got an error: 0x%x\n", ret))
+		return perfcounter, fmt.Errorf("got an error: 0x%x", ret)
 	}
 
 	var collect = func(samples int, waitTime int) float64 {
@@ -73,7 +73,6 @@ func ReadPerformanceCounter(counter string, pollingAttempts int, pollingDelay in
 		var x float64
 		x, finalSample = data[0], data[1:]
 		if x != 0 {
-			fmt.Sprintf("first element non-zero, reintroducing the measurement into the final sample: %f", x)
 			finalSample = data
 		}
 		var total float64 = 0
