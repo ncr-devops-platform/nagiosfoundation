@@ -1,0 +1,7 @@
+products:
+  check_available_memory:
+    build:
+      main-pkg: 'cmd/check_available_memory'
+      os-archs:
+        - os: windows
+          arch: amd64

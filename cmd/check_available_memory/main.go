@@ -1,4 +1,4 @@
-package checkavailablememory
+package main
 
 import (
 	"github.com/jkerry/nagiosfoundation/lib/app/nagiosfoundation"
