@@ -25,3 +25,29 @@ products:
             os-archs:
               - os: windows
                 arch: amd64
+  check_performance_counter:
+    build:
+      main-pkg: 'cmd/check_performance_counter'
+      os-archs:
+        - os: windows
+          arch: amd64
+    dist:
+        disters:
+          type: os-arch-bin
+          config:
+            os-archs:
+              - os: windows
+                arch: amd64
+  check_service_running:
+    build:
+      main-pkg: 'cmd/check_service_running'
+      os-archs:
+        - os: windows
+          arch: amd64
+    dist:
+        disters:
+          type: os-arch-bin
+          config:
+            os-archs:
+              - os: windows
+                arch: amd64

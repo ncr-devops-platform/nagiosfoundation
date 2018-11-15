@@ -1,7 +1,9 @@
 version := $(shell git describe --tags)
 platforms = windows-amd64
 
+
 package: $(platforms)
+
 clean:
 						./godelw clean
 						rm -rf ./out/package
