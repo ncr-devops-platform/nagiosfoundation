@@ -5,3 +5,23 @@ products:
       os-archs:
         - os: windows
           arch: amd64
+    dist:
+        disters:
+          type: os-arch-bin
+          config:
+            os-archs:
+              - os: windows
+                arch: amd64
+  check_cpu:
+    build:
+      main-pkg: 'cmd/check_cpu'
+      os-archs:
+        - os: windows
+          arch: amd64
+    dist:
+        disters:
+          type: os-arch-bin
+          config:
+            os-archs:
+              - os: windows
+                arch: amd64
