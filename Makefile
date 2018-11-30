@@ -1,5 +1,5 @@
 version := $(shell git describe --tags)
-platforms = windows-amd64
+platforms = windows-amd64 linux-amd64
 
 
 package: $(platforms)
