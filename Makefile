@@ -10,6 +10,7 @@ clean:
 
 $(platforms):
 						./godelw build
-						mkdir -p ./out/package/$(version)/$@/bin
-						cp ./out/build/*/$(version)/$@/*.exe ./out/package/$(version)/$@/bin/.
-						tar cvf ./out/package/nagiosfoundation-$@-$(version).tgz ./out/package/$(version)/$@/bin/*
+						mkdir -p ./out/package/$(version).dirty/$@/bin
+						cp ./out/build/*/$(version).dirty/$@/* ./out/package/$(version).dirty/$@/bin/.
+						tar -cvf ./out/package/nagiosfoundation-$@-$(version).dirty.tgz -C ./out/package/$(version).dirty/$@ bin
+
