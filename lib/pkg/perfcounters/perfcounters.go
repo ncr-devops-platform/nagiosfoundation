@@ -1,5 +1,7 @@
 package perfcounters
 
+// +build windows
+
 import (
 	"errors"
 	"fmt"

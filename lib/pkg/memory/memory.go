@@ -11,7 +11,7 @@ import (
 	"github.com/golang/glog"
 )
 
-func GetFreeMemory(pollingAttempts int, pollingDelay int) (float64, error) {
+func GetAvgFreeMemory(pollingAttempts int, pollingDelay int) (float64, error) {
 	var total float64
 	total = 0
 	for i := 0; i < pollingAttempts; i++ {
