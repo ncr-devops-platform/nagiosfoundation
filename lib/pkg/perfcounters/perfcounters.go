@@ -84,7 +84,7 @@ func ReadPerformanceCounter(counter string, pollingAttempts int, pollingDelay in
 	}
 
 	perfcounter.Name = counter
-	perfcounter.Value = collect(3, 1)
+	perfcounter.Value = collect(pollingAttempts, pollingDelay)
 
 	return perfcounter, nil
 

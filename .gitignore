@@ -3,3 +3,5 @@ dist
 build.sh
 out
 bin
+vendor
+_vendor*

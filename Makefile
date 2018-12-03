@@ -11,6 +11,6 @@ clean:
 $(platforms):
 						./godelw build
 						mkdir -p ./out/package/$(version)/$@/bin
-						cp ./out/build/*/$(version)/$@/* ./out/package/$(version)/$@/bin/.
+						cp ./out/build/*/$(version)*/$@/* ./out/package/$(version)/$@/bin/.
 						tar -cvf ./out/package/nagiosfoundation-$@-$(version).tgz -C ./out/package/$(version)/$@ bin
 
