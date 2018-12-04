@@ -1,13 +1,13 @@
 // +build windows
 
-package memory
+package cpu
 
 import (
 	"github.com/jkerry/nagiosfoundation/lib/pkg/perfcounters"
 )
 
-func GetFreeMemory() (float64, error) {
-	counter, err := perfcounters.ReadPerformanceCounter("\\Memory\\Available MBytes", 2, 1)
+func GetCPULoad() (float64, error) {
+	counter, err := perfcounters.ReadPerformanceCounter("\\Processor(_Total)\\% Processor Time", 2, 1)
 	if err == nil {
 		return counter.Value, nil
 	}
