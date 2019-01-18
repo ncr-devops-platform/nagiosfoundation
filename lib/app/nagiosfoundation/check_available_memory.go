@@ -21,7 +21,7 @@ func CheckAvailableMemory() {
 	if err == nil {
 		var msg string
 		var retcode int
-		msg, retcode = nagiosformatters.LesserFormatNagiosCheck("\\Memory\\Available MBytes", freememory, *warning, *critical, *metricName)
+		msg, retcode = nagiosformatters.LesserFormatNagiosCheck("CheckAvailableMemoryMbytes", freememory, *warning, *critical, *metricName)
 		fmt.Println(msg)
 		os.Exit(retcode)
 	} else {

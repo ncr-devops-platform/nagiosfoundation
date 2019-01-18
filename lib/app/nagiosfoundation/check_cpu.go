@@ -21,7 +21,7 @@ func CheckCPU() {
 	if err == nil {
 		var msg string
 		var retcode int
-		msg, retcode = nagiosformatters.GreaterFormatNagiosCheck("\\Processor(_Total)\\% Processor Time", value, *warning, *critical, *metricName)
+		msg, retcode = nagiosformatters.GreaterFormatNagiosCheck("CheckAVGCPULoad", value, *warning, *critical, *metricName)
 		fmt.Println(msg)
 		os.Exit(retcode)
 	} else {
