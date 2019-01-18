@@ -5,8 +5,12 @@ products:
       os-archs:
         - os: windows
           arch: amd64
+        - os: windows
+          arch: "386"
         - os: linux
           arch: amd64
+        - os: linux
+          arch: "386"
     dist:
         disters:
           type: os-arch-bin
@@ -20,8 +24,12 @@ products:
       os-archs:
         - os: windows
           arch: amd64
+        - os: windows
+          arch: "386"
         - os: linux
           arch: amd64
+        - os: linux
+          arch: "386"
     dist:
         disters:
           type: os-arch-bin
@@ -35,6 +43,8 @@ products:
       os-archs:
         - os: windows
           arch: amd64
+        - os: windows
+          arch: "386"
     dist:
         disters:
           type: os-arch-bin
@@ -48,8 +58,12 @@ products:
       os-archs:
         - os: windows
           arch: amd64
+        - os: windows
+          arch: "386"
         - os: linux
           arch: amd64
+        - os: linux
+          arch: "386"
     dist:
         disters:
           type: os-arch-bin
