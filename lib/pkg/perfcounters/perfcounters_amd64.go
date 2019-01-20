@@ -1,6 +1,6 @@
 package perfcounters
 
-// +build windows
+// +build windows,amd64
 
 import (
 	"errors"
@@ -8,13 +8,9 @@ import (
 	"time"
 	"unsafe"
 
+	"github.com/golang/glog"
 	"github.com/lxn/win"
 )
-
-type PerformanceCounter struct {
-	Name  string
-	Value float64
-}
 
 // ReadPerformanceCounter reads a performance counter
 func ReadPerformanceCounter(counter string, pollingAttempts int, pollingDelay int) (PerformanceCounter, error) {
@@ -49,7 +45,6 @@ func ReadPerformanceCounter(counter string, pollingAttempts int, pollingDelay in
 		for index := 0; index < samples; index++ {
 			ret = win.PdhCollectQueryData(queryHandle)
 			if ret == win.ERROR_SUCCESS {
-
 				var bufSize uint32
 				var bufCount uint32
 				var size uint32 = uint32(unsafe.Sizeof(win.PDH_FMT_COUNTERVALUE_ITEM_DOUBLE{}))
@@ -62,7 +57,9 @@ func ReadPerformanceCounter(counter string, pollingAttempts int, pollingDelay in
 					if ret == win.ERROR_SUCCESS {
 						for i := 0; i < int(bufCount); i++ {
 							c := filledBuf[i]
-							data = append(data, c.FmtValue.DoubleValue)
+							formattedValue := c.FmtValue.DoubleValue
+							glog.Infof("data point retrieved: [%s] %v", counter, formattedValue)
+							data = append(data, formattedValue)
 						}
 					}
 				}
