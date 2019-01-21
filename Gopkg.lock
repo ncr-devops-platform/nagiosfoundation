@@ -2,6 +2,25 @@
 
 
 [[projects]]
+  digest = "1:e92f5581902c345eb4ceffdcd4a854fb8f73cf436d47d837d1ec98ef1fe0a214"
+  name = "github.com/StackExchange/wmi"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "5d049714c4a64225c3c79a7cf7d02f7fb5b96338"
+  version = "1.0.0"
+
+[[projects]]
+  digest = "1:c96d16a4451e48e2c44b2c3531fd8ec9248d822637f1911a88959ca0bcae4a64"
+  name = "github.com/go-ole/go-ole"
+  packages = [
+    ".",
+    "oleutil",
+  ]
+  pruneopts = "UT"
+  revision = "39dc8486bd0952279431257138bc428275b86797"
+  version = "v1.2.2"
+
+[[projects]]
   branch = "master"
   digest = "1:1ba1d79f2810270045c328ae5d674321db34e3aae468eb4233883b473c5c0467"
   name = "github.com/golang/glog"
@@ -17,33 +36,13 @@
   pruneopts = "UT"
   revision = "a7f87360b10eafe73bd3ff01db16976fe7560fbf"
 
-[[projects]]
-  digest = "1:62f7fc241ae09be07062472af2bb058167f1c36fa21028ebf6a4654b7d1ba118"
-  name = "github.com/shirou/gopsutil"
-  packages = ["winservices"]
-  pruneopts = "UT"
-  revision = "0f70a4a06f7a1039305ec9b3ba9c2800f8929fba"
-  version = "v2.18.11"
-
-[[projects]]
-  branch = "master"
-  digest = "1:39bb4a56675b7653dd5e4f92a22845cd8a76f31ca4e51fc04bb84ca11ef3e823"
-  name = "golang.org/x/sys"
-  packages = [
-    "windows",
-    "windows/svc",
-    "windows/svc/mgr",
-  ]
-  pruneopts = "UT"
-  revision = "4ed8d59d0b35e1e29334a206d1b3f38b1e5dfb31"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/StackExchange/wmi",
     "github.com/golang/glog",
     "github.com/lxn/win",
-    "github.com/shirou/gopsutil/winservices",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

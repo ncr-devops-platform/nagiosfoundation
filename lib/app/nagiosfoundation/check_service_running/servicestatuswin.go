@@ -5,20 +5,33 @@ package nagiosfoundation
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 
-	"github.com/shirou/gopsutil/winservices"
+	"github.com/StackExchange/wmi"
+	"github.com/golang/glog"
 )
+
+type Win32_Service struct {
+	Name string
+}
 
 func CheckServiceRunning() {
 	var serviceName = flag.String("service_name", "", "the name of the service to check")
 	flag.Parse()
-	s, _ := winservices.NewService(*serviceName)
-	var ss winservices.ServiceStatus
-	ss, _ = s.QueryStatus()
+
+	var dst []Win32_Service
+	whereClause := fmt.Sprintf("where Name ='%v' AND State LIKE 'Running'", *serviceName)
+	glog.Infof("Where clause: %v", whereClause)
+	query := wmi.CreateQuery(&dst, whereClause)
+	glog.Infof("Service Query: %s", query)
+	err := wmi.Query(query, &dst)
+	if err != nil {
+		log.Fatal(err)
+	}
 	var msg string
 	var retcode int
-	if ss.State != 4 {
+	if len(dst) <= 0 {
 		msg = fmt.Sprintf("CheckServiceRunning CRITICAL - %s not in a running state", *serviceName)
 		retcode = 2
 	} else {
