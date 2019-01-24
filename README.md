@@ -47,3 +47,13 @@ make
 
 ### Artifacts
 The build artifacts can be found in `out/build`.
+
+## Releases
+The `Makefile` uses [`ghr`](https://github.com/tcnksm/ghr) to create the GitHub Release and upload artifacts. This would normally be done by the project owner and requires a GitHub API token. Refer to the [ghr project](https://github.com/tcnksm/ghr) for more information and install `ghr` with
+```
+go get -u github.com/tcnksm/ghr
+```
+The Makefile target is `release` and is used when lauching make with
+```
+make release
+```
