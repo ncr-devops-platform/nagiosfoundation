@@ -10,8 +10,10 @@ clean:
 release: clean package
 	ghr $(version) ./out/package
 
-$(platforms):
+build:
 	./godelw build
+
+$(platforms): build
 	mkdir -p ./out/package/$(version)/$@/bin
 	cp ./out/build/*/$(version)*/$@/* ./out/package/$(version)/$@/bin/.
 	tar -zcvf ./out/package/nagiosfoundation-$@-$(version).tgz -C ./out/package/$(version)/$@ bin
