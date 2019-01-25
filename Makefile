@@ -1,4 +1,4 @@
-version := $(shell git describe --tags)
+version := $(shell ./godelw project-version)
 platforms = windows-amd64 linux-amd64 windows-386 linux-386
 
 package: $(platforms)
