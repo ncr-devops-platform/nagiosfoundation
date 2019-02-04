@@ -1,6 +1,6 @@
 package perfcounters
 
-// +build windows,386
+// +build windows
 
 import (
 	"bytes"
@@ -11,6 +11,11 @@ import (
 
 	"github.com/golang/glog"
 )
+
+type PerformanceCounter struct {
+	Name  string
+	Value float64
+}
 
 type PowerShell struct {
 	powerShell string
