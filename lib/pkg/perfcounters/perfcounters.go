@@ -1,6 +1,6 @@
-package perfcounters
-
 // +build windows
+
+package perfcounters
 
 import (
 	"bytes"
