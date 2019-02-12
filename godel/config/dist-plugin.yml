@@ -52,9 +52,9 @@ products:
             os-archs:
               - os: windows
                 arch: amd64
-  check_service_running:
+  check_service:
     build:
-      main-pkg: 'cmd/check_service_running'
+      main-pkg: 'cmd/check_service'
       os-archs:
         - os: windows
           arch: amd64
