@@ -33,7 +33,7 @@ func (u UserGroupTestHandler) LookupGroup(groupName string) (*user.Group, error)
 	return nil, u.testString(groupName)
 }
 
-func (u UserGroupTestHandler) LookupGroupId(groupId string) (*user.Group, error) {
+func (u UserGroupTestHandler) LookupGroupID(groupID string) (*user.Group, error) {
 	return &user.Group{Name: goodString}, nil
 }
 

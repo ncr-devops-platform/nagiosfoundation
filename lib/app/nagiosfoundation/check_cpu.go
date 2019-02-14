@@ -12,6 +12,13 @@ import (
 	"github.com/jkerry/nagiosfoundation/lib/pkg/nagiosformatters"
 )
 
+// CheckCPU gets the CPU load then emits a critical response
+// if it's above flag -critical, a warning if it's above
+// flag -warning and good response for everything else.
+//
+// This function does not return. It prints the text response
+// then exits with the appropriate code. Good: 0, Warning: 1,
+// Critical: 2, and On Error: 3.
 func CheckCPU() {
 	var warning = flag.Float64("warning", 85, "the average cpu threshold to issue a warning alert")
 	var critical = flag.Float64("critical", 95, "the average cpu threshold to issue a critical alert")
