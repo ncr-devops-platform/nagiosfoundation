@@ -28,21 +28,12 @@
   pruneopts = "UT"
   revision = "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
 
-[[projects]]
-  branch = "master"
-  digest = "1:a65caa49a129fb2fc74981bfcd815cba09ea1e67cabe8130fe14be2751b93c81"
-  name = "github.com/lxn/win"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "a7f87360b10eafe73bd3ff01db16976fe7560fbf"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/StackExchange/wmi",
     "github.com/golang/glog",
-    "github.com/lxn/win",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
