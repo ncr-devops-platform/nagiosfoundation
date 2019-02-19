@@ -7,31 +7,53 @@ import (
 	"os/user"
 )
 
+// UserGroupService is an interface that allows for overriding
+// methods for looking up a user, a group, finding the ID for
+// a group name, and fetching a list of groups to which a user
+// belongs.
 type UserGroupService interface {
 	Lookup(string) (*user.User, error)
 	LookupGroup(string) (*user.Group, error)
-	LookupGroupId(string) (*user.Group, error)
+	LookupGroupID(string) (*user.Group, error)
 	GroupIds(*user.User) ([]string, error)
 }
 
+// UserGroupHandler is a specific implementation of the methods
+// in the UserGroupService interface. The methods implemented use
+// Go's user package which should be compatible with both Linux
+// and Windows.
 type UserGroupHandler struct{}
 
+// Lookup is given a user name and returns the details of a user
+// on the host OS. This implementation calls Lookup() in Go's
+// user package.
 func (u UserGroupHandler) Lookup(userName string) (*user.User, error) {
 	return user.Lookup(userName)
 }
 
+// LookupGroup is given a group name and returns the details of
+// the group on the host OS. This implementation calls
+// LookupGroup() in Go's user package.
 func (u UserGroupHandler) LookupGroup(groupName string) (*user.Group, error) {
 	return user.LookupGroup(groupName)
 }
 
-func (u UserGroupHandler) LookupGroupId(groupName string) (*user.Group, error) {
-	return user.LookupGroupId(groupName)
+// LookupGroupID is given a group ID and returns the details of
+// the group on the host OS. This implmentation calls
+// LookupGroupId() in Go's user package.
+func (u UserGroupHandler) LookupGroupID(groupID string) (*user.Group, error) {
+	return user.LookupGroupId(groupID)
 }
 
+// GroupIds is given the User struct from Go's user package and
+// returns a list of group IDs to which the user belongs.
 func (u UserGroupHandler) GroupIds(userInfo *user.User) ([]string, error) {
 	return userInfo.GroupIds()
 }
 
+// UserGroupCheck is a struct in which a user and group
+// on the host OS can be populated, then information about
+// the user and group can be retrieved.
 type UserGroupCheck struct {
 	UserName  string
 	GroupName string
@@ -39,7 +61,8 @@ type UserGroupCheck struct {
 	Service UserGroupService
 }
 
-// Checks for the existence of a user on the host operating system.
+// CheckUser checks for the existence of a user on the host
+// operating system.
 //
 // Returns a string containing plaintext result and an integer
 // with the return code. 0 indicates the user exists, 3 indicates
@@ -61,7 +84,8 @@ func (ugc UserGroupCheck) CheckUser() (string, int) {
 	return fmt.Sprintf(formatString, "CheckUser", ugc.UserName), retCode
 }
 
-// Checks for the existence of a group on the host operating system.
+// CheckGroup checks for the existence of a group on the host
+// operating system.
 //
 // Returns a string containing plaintext result and an integer
 // with the return code. 0 indicates the group exists, 3 indicates
@@ -83,8 +107,8 @@ func (ugc UserGroupCheck) CheckGroup() (string, int) {
 	return fmt.Sprintf(formatString, "CheckGroup", ugc.GroupName), retCode
 }
 
-// Checks for the existence of a user and if it belongs to the
-// named group on the host operating system.
+// CheckUserGroup checks for the existence of a user and if it
+// belongs to the named group on the host operating system.
 //
 // Returns a string containing plaintext result and an integer
 // with the return code. 0 indicates the user exists and is in
@@ -105,7 +129,7 @@ func (ugc UserGroupCheck) CheckUserGroup() (string, int) {
 		msg = fmt.Sprintf("CheckUserGroup CRITICAL - User %s exists but is not in Group %s",
 			ugc.UserName, ugc.GroupName)
 		for i := range groupIds {
-			groupInfo, _ := ugc.Service.LookupGroupId(groupIds[i])
+			groupInfo, _ := ugc.Service.LookupGroupID(groupIds[i])
 			if groupInfo.Name == ugc.GroupName {
 				msg = fmt.Sprintf("CheckUserGroup OK - User %s exists and is in Group %s",
 					ugc.UserName, ugc.GroupName)
@@ -117,8 +141,9 @@ func (ugc UserGroupCheck) CheckUserGroup() (string, int) {
 	return msg, retcode
 }
 
-// Checks for the existence of a user and if it belongs to the
-// named group on the host operating system.
+// CheckUserGroupFlags checks for the existence of a user and
+// if it belongs to the named group on the host operating system.
+// It does this based on command line flags.
 //
 // The user and group are provided with
 // the command line flags, -user, and -group, respectively.

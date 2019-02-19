@@ -12,6 +12,14 @@ import (
 	"github.com/jkerry/nagiosfoundation/lib/pkg/nagiosformatters"
 )
 
+// CheckAvailableMemory determines the percentage of free memory
+// remaining then emits a critical response if it's below
+// flag -critical, a warning response if below flag -warning,
+// and good response otherwise.
+//
+// This function does not return. It prints the text response
+// then exits with the appropriate code. Good: 0, Warning: 1,
+// Critical: 2, and On Error: 3.
 func CheckAvailableMemory() {
 	var warning = flag.Float64("warning", 85, "the memory threshold to issue a warning alert")
 	var critical = flag.Float64("critical", 95, "the memory threshold to issue a critical alert")
