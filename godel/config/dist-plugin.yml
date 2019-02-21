@@ -90,3 +90,22 @@ products:
             os-archs:
               - os: windows
                 arch: amd64
+  check_process:
+    build:
+      main-pkg: 'cmd/check_process'
+      os-archs:
+        - os: windows
+          arch: amd64
+        - os: windows
+          arch: "386"
+        - os: linux
+          arch: amd64
+        - os: linux
+          arch: "386"
+    dist:
+        disters:
+          type: os-arch-bin
+          config:
+            os-archs:
+              - os: windows
+                arch: amd64
