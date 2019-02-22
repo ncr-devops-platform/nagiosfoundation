@@ -7,7 +7,5 @@ import (
 )
 
 func main() {
-	nagiosfoundation.InitializeCommand()
-
 	nagiosfoundation.CheckPerformanceCounter()
 }
