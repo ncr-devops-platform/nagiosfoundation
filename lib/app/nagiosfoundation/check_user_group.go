@@ -124,16 +124,17 @@ func (ugc UserGroupCheck) CheckUserGroup() (string, int) {
 		groupIds, err := ugc.Service.GroupIds(userInfo)
 		if err != nil {
 			msg = fmt.Sprintf("CheckUserGroup CRITICAL - Could not get Group IDs for user %s", ugc.UserName)
-		}
+		} else {
+			msg = fmt.Sprintf("CheckUserGroup CRITICAL - User %s exists but is not in Group %s",
+				ugc.UserName, ugc.GroupName)
 
-		msg = fmt.Sprintf("CheckUserGroup CRITICAL - User %s exists but is not in Group %s",
-			ugc.UserName, ugc.GroupName)
-		for i := range groupIds {
-			groupInfo, _ := ugc.Service.LookupGroupID(groupIds[i])
-			if groupInfo.Name == ugc.GroupName {
-				msg = fmt.Sprintf("CheckUserGroup OK - User %s exists and is in Group %s",
-					ugc.UserName, ugc.GroupName)
-				retcode = 0
+			for i := range groupIds {
+				groupInfo, _ := ugc.Service.LookupGroupID(groupIds[i])
+				if groupInfo.Name == ugc.GroupName {
+					msg = fmt.Sprintf("CheckUserGroup OK - User %s exists and is in Group %s",
+						ugc.UserName, ugc.GroupName)
+					retcode = 0
+				}
 			}
 		}
 	}
@@ -141,17 +142,15 @@ func (ugc UserGroupCheck) CheckUserGroup() (string, int) {
 	return msg, retcode
 }
 
-// CheckUserGroupFlags checks for the existence of a user and
+// CheckUserGroupFlagsWithHandler checks for the existence of a user and
 // if it belongs to the named group on the host operating system.
 // It does this based on command line flags.
 //
 // The user and group are provided with
 // the command line flags, -user, and -group, respectively.
-// This function then exist with the return code of the
-// user, group, or usergroup function.
 //
-// Returns - see CheckUser(), CheckGroup, and CheckUserGroup()
-func CheckUserGroupFlags() {
+// Returns - result message and return code.
+func CheckUserGroupFlagsWithHandler(userGroupHandler UserGroupService) (string, int) {
 	userPtr := flag.String("user", "", "user name")
 	groupPtr := flag.String("group", "", "group name")
 
@@ -163,7 +162,7 @@ func CheckUserGroupFlags() {
 	userGroupCheck := UserGroupCheck{
 		UserName:  *userPtr,
 		GroupName: *groupPtr,
-		Service:   new(UserGroupHandler),
+		Service:   userGroupHandler,
 	}
 
 	if *userPtr != "" && *groupPtr != "" {
@@ -173,6 +172,15 @@ func CheckUserGroupFlags() {
 	} else if *groupPtr != "" {
 		msg, retCode = userGroupCheck.CheckGroup()
 	}
+
+	return msg, retCode
+}
+
+// CheckUserGroupFlagsWithExit executes the normal user/group
+// checks in CheckUserGroupFlags() then prints the results
+// and exits.
+func CheckUserGroupFlagsWithExit() {
+	msg, retCode := CheckUserGroupFlagsWithHandler(new(UserGroupHandler))
 
 	fmt.Println(msg)
 	os.Exit(retCode)
