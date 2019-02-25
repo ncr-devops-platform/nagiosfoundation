@@ -9,6 +9,16 @@ clean:
 	./godelw clean
 	rm -rf $(package_path)
 
+test:
+	go test -v ./...
+
+test-godel:
+	./godelw test
+
+coverage:
+	go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+	go tool cover -html=coverage.txt -o coverage.html
+
 release: clean package
 	ghr $(version) $(package_path)
 
