@@ -29,10 +29,6 @@
   branch = "master"
   name = "github.com/golang/glog"
 
-[[constraint]]
-  name = "github.com/shirou/gopsutil"
-  version = "2.18.11"
-
 [prune]
   go-tests = true
   unused-packages = true
@@ -40,3 +36,7 @@
 [[constraint]]
   name = "github.com/StackExchange/wmi"
   version = "1.0.0"
+
+[[constraint]]
+  name = "golang.org/x/sys"
+  revision = "90b0e4468f9980bf79a2290394adaf7f045c5d24"
