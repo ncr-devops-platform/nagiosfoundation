@@ -2,21 +2,24 @@ package nagiosfoundation
 
 import (
 	"errors"
+	"flag"
+	"os"
 	"os/user"
 	"testing"
 )
 
 const (
-	goodString = "good"
-	badString  = "bad"
+	goodUserGroupString  = "good"
+	badUserGroupString   = "bad"
+	errorUserGroupString = "error"
 )
 
-type UserGroupTestHandler struct{}
+type userGroupTestHandler struct{}
 
-func (u UserGroupTestHandler) testString(value string) error {
+func (u userGroupTestHandler) testString(value string) error {
 	var retval error
 
-	if value == goodString {
+	if value != badUserGroupString {
 		retval = nil
 	} else {
 		retval = errors.New("testing error")
@@ -25,37 +28,48 @@ func (u UserGroupTestHandler) testString(value string) error {
 	return retval
 }
 
-func (u UserGroupTestHandler) Lookup(userName string) (*user.User, error) {
-	return nil, u.testString(userName)
+func (u userGroupTestHandler) Lookup(userName string) (*user.User, error) {
+	user := user.User{
+		Username: userName,
+	}
+
+	return &user, u.testString(userName)
 }
 
-func (u UserGroupTestHandler) LookupGroup(groupName string) (*user.Group, error) {
+func (u userGroupTestHandler) LookupGroup(groupName string) (*user.Group, error) {
 	return nil, u.testString(groupName)
 }
 
-func (u UserGroupTestHandler) LookupGroupID(groupID string) (*user.Group, error) {
-	return &user.Group{Name: goodString}, nil
+func (u userGroupTestHandler) LookupGroupID(groupID string) (*user.Group, error) {
+	return &user.Group{Name: goodUserGroupString}, nil
 }
 
-func (u UserGroupTestHandler) GroupIds(userInfo *user.User) ([]string, error) {
-	return []string{"1"}, nil
+func (u userGroupTestHandler) GroupIds(userInfo *user.User) ([]string, error) {
+	groupIDList := []string{"1"}
+	var err error
+
+	if userInfo != nil && userInfo.Username == errorUserGroupString {
+		groupIDList = nil
+		err = errors.New("Error fetching Group IDs")
+	}
+	return groupIDList, err
 }
 
 func TestCheckUser(t *testing.T) {
 	var retval int
 
 	if _, retval = (UserGroupCheck{
-		UserName:  goodString,
+		UserName:  goodUserGroupString,
 		GroupName: "",
-		Service:   new(UserGroupTestHandler),
+		Service:   new(userGroupTestHandler),
 	}).CheckUser(); retval != 0 {
 		t.Error("CheckUser() with good user failed")
 	}
 
 	if _, retval = (UserGroupCheck{
-		UserName:  badString,
+		UserName:  badUserGroupString,
 		GroupName: "",
-		Service:   new(UserGroupTestHandler),
+		Service:   new(userGroupTestHandler),
 	}).CheckUser(); retval != 3 {
 		t.Error("CheckUser() with bad user failed")
 	}
@@ -63,55 +77,97 @@ func TestCheckUser(t *testing.T) {
 
 func TestCheckGroup(t *testing.T) {
 	var retval int
+	handler := new(userGroupTestHandler)
 
 	if _, retval = (UserGroupCheck{
 		UserName:  "",
-		GroupName: goodString,
-		Service:   new(UserGroupTestHandler),
+		GroupName: goodUserGroupString,
+		Service:   handler,
 	}).CheckGroup(); retval != 0 {
 		t.Error("CheckGroup() with good group failed")
 	}
 
 	if _, retval = (UserGroupCheck{
 		UserName:  "",
-		GroupName: badString,
-		Service:   new(UserGroupTestHandler),
+		GroupName: badUserGroupString,
+		Service:   handler,
 	}).CheckGroup(); retval != 3 {
 		t.Error("CheckGroup() with bad group failed")
 	}
 }
+
 func TestCheckUserGroup(t *testing.T) {
 	var retval int
+	handler := new(userGroupTestHandler)
 
 	if _, retval = (UserGroupCheck{
-		UserName:  goodString,
-		GroupName: goodString,
-		Service:   new(UserGroupTestHandler),
+		UserName:  goodUserGroupString,
+		GroupName: goodUserGroupString,
+		Service:   handler,
 	}).CheckUserGroup(); retval != 0 {
 		t.Error("CheckGroup() with good user and good group failed")
 	}
 
 	if _, retval = (UserGroupCheck{
-		UserName:  goodString,
-		GroupName: badString,
-		Service:   new(UserGroupTestHandler),
+		UserName:  errorUserGroupString,
+		GroupName: goodUserGroupString,
+		Service:   handler,
+	}).CheckUserGroup(); retval != 3 {
+		t.Error("CheckGroup() with GroupIds() returning error failed")
+	}
+
+	if _, retval = (UserGroupCheck{
+		UserName:  goodUserGroupString,
+		GroupName: badUserGroupString,
+		Service:   handler,
 	}).CheckUserGroup(); retval != 3 {
 		t.Error("CheckGroup() with good user and bad group failed")
 	}
 
 	if _, retval = (UserGroupCheck{
-		UserName:  badString,
-		GroupName: badString,
-		Service:   new(UserGroupTestHandler),
+		UserName:  badUserGroupString,
+		GroupName: badUserGroupString,
+		Service:   handler,
 	}).CheckUserGroup(); retval != 3 {
 		t.Error("CheckGroup() with bad user and bad group failed")
 	}
 
 	if _, retval = (UserGroupCheck{
-		UserName:  badString,
-		GroupName: goodString,
-		Service:   new(UserGroupTestHandler),
+		UserName:  badUserGroupString,
+		GroupName: goodUserGroupString,
+		Service:   handler,
 	}).CheckUserGroup(); retval != 3 {
 		t.Error("CheckGroup() with bad user and good group failed")
 	}
+}
+
+func TestCheckUserGroupWithFlags(t *testing.T) {
+	pgmName := "TestCheckUserGroupWithFlags"
+	savedArgs := os.Args
+	savedFlagCommandLine := flag.CommandLine
+	handler := new(userGroupTestHandler)
+
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	os.Args = []string{pgmName, "-" + "user", goodUserGroupString}
+	_, err := CheckUserGroupFlagsWithHandler(handler)
+	if err != 0 {
+		t.Error("CheckUserGroup with -user flag failed")
+	}
+
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	os.Args = []string{pgmName, "-" + "group", goodUserGroupString}
+	_, err = CheckUserGroupFlagsWithHandler(handler)
+	if err != 0 {
+		t.Error("CheckUserGroup with -group flag failed")
+	}
+
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	os.Args = []string{pgmName, "-" + "user", goodUserGroupString, "-" + "group", goodUserGroupString}
+	_, err = CheckUserGroupFlagsWithHandler(handler)
+	if err != 0 {
+		t.Error("CheckUserGroup with -user and -group flags failed")
+	}
+
+	os.Args = savedArgs
+	flag.CommandLine = savedFlagCommandLine
 }
