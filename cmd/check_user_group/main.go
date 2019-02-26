@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	nagiosfoundation.CheckUserGroupFlags()
+	nagiosfoundation.CheckUserGroupFlagsWithExit()
 }
