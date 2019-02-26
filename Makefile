@@ -1,3 +1,6 @@
+# godel_version is only used to ensure all the godel bits
+# have been downloaded before determining the project-version.
+godel_version := $(shell ./godelw version)
 version := $(shell ./godelw project-version)
 package_path = ./out/package
 package_version = $(package_path)/$(version)

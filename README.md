@@ -1,7 +1,9 @@
 # nagios-foundation
 
-A suite of Nagios style checks and metrics covering the basic needs for monitoring in a Sensu-like system.
+[![Build Status](https://travis-ci.com/jkerry/nagios-foundation.svg?branch=master)](https://travis-ci.com/jkerry/nagios-foundation)
+[![codecov](https://codecov.io/gh/jkerry/nagios-foundation/branch/master/graph/badge.svg)](https://codecov.io/gh/jkerry/nagios-foundation)
 
+A suite of Nagios style checks and metrics covering the basic needs for monitoring in a Sensu-like system.
 ---
 
 ## Building
