@@ -34,15 +34,3 @@ func SetFlagIfNotProvided(flagName string, flagValue string) bool {
 func SetDefaultGlogStderr() {
 	SetFlagIfNotProvided("logtostderr", "true")
 }
-
-// InitializeCommand executes all the functions to
-// initialize/setup/configure a command check in the
-// nagiosfoundation package. The exported functions can
-// be called independently if needed, but calling
-// InitializeCommand() will call all of them for you.
-//
-// This is being done in anticipation of also emitting a
-// version on request.
-func InitializeCommand() {
-	SetDefaultGlogStderr()
-}
