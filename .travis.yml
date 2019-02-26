@@ -8,7 +8,7 @@ git:
   depth: 1
 
 install:
-  - test ! -d /home/travis/gopath/src/github.com/jkerry && mv /home/travis/gopath/src/github.com/* /home/travis/gopath/src/github.com/jkerry
+  #- test ! -d /home/travis/gopath/src/github.com/jkerry && mv /home/travis/gopath/src/github.com/* /home/travis/gopath/src/github.com/jkerry
   - mv /home/travis/gopath/src/github.com/jkerry/nagios-foundation /home/travis/gopath/src/github.com/jkerry/nagiosfoundation
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
   - dep ensure -v
