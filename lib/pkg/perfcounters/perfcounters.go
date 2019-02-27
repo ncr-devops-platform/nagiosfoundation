@@ -55,18 +55,34 @@ func ReadPerformanceCounter(counter string, pollingAttempts int, pollingDelay in
 		"Select-Object -ExpandProperty CounterSamples |\n" +
 		"Select-Object -ExpandProperty CookedValue |\n" +
 		"Measure-Object -Average).Average"
-	glog.Infof("Generated powershell performance monitor command:\n%s\n", command)
+
+	if glog.V(2) {
+		glog.Infof("Generated powershell performance monitor command:\n%s\n", command)
+	}
+
 	posh := New()
 	stdout, _, err := posh.Execute(command)
-	glog.Infof("powershell output: \n\n %v", stdout)
+
+	if glog.V(2) {
+		glog.Infof("powershell output: \n\n %v", stdout)
+	}
+
 	if err != nil {
-		glog.Errorf("Error running powershell script to retrieve performance counter values: %v", err)
+		if glog.V(1) {
+			glog.Errorf("Error running powershell script to retrieve performance counter values: %v", err)
+		}
+
 		return perfcounter, err
 	}
+
 	trimmed_stdout := strings.TrimSpace(stdout)
 	avgValue, err := strconv.ParseFloat(trimmed_stdout, 64)
+
 	if err != nil {
-		glog.Errorf("Could not parse %s to float64: %v", stdout, err)
+		if glog.V(1) {
+			glog.Errorf("Could not parse %s to float64: %v", stdout, err)
+		}
+
 		return perfcounter, err
 	}
 
