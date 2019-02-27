@@ -13,7 +13,10 @@ import (
 func GetFreeMemory() (float64, error) {
 	out, err := exec.Command("free").Output()
 	if err != nil {
-		glog.Errorf("Error running free: %v", err)
+		if glog.V(1) {
+			glog.Errorf("Error running free: %v", err)
+		}
+
 		return 0.0, err
 	}
 
@@ -21,7 +24,10 @@ func GetFreeMemory() (float64, error) {
 
 	free, err := strconv.ParseFloat(strings.Fields(lines[2])[3], 64)
 	if err != nil {
-		glog.Errorf("Error parsing free output to float64: %v", err)
+		if glog.V(1) {
+			glog.Errorf("Error parsing free output to float64: %v", err)
+		}
+
 		return 0.0, err
 	}
 
