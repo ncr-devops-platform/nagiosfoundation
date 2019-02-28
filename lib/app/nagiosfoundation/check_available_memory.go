@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jkerry/nagiosfoundation/lib/pkg/memory"
-	"github.com/jkerry/nagiosfoundation/lib/pkg/nagiosformatters"
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/memory"
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/nagiosformatters"
 )
 
 // CheckAvailableMemoryWithHandler determines the percentage of free memory

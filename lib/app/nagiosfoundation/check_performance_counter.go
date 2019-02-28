@@ -8,8 +8,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/jkerry/nagiosfoundation/lib/pkg/nagiosformatters"
-	"github.com/jkerry/nagiosfoundation/lib/pkg/perfcounters"
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/nagiosformatters"
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/perfcounters"
 )
 
 func CheckPerformanceCounter() {
