@@ -3,7 +3,7 @@
 package memory
 
 import (
-	"github.com/jkerry/nagiosfoundation/lib/pkg/perfcounters"
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/perfcounters"
 )
 
 func GetFreeMemory() (float64, error) {

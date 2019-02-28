@@ -1,7 +1,7 @@
 package main
 
 import (
-	nagiosfoundation "github.com/jkerry/nagiosfoundation/lib/app/nagiosfoundation/check_service"
+	nagiosfoundation "github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation/check_service"
 )
 
 func main() {

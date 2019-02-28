@@ -8,13 +8,13 @@ During the build gödel will automatically install itself at `$HOME/.godel` but 
 ### Create workspace
 ```
 cd $GOPATH
-mkdir -p nagios-foundation/src/github.com/jkerry/
-cd nagios-foundation/src/github.com/jkerry/
+mkdir -p nagios-foundation/src/github.com/ncr-devops-platform/
+cd nagios-foundation/src/github.com/ncr-devops-platform/
 ```
 
 ### Clone project
 ```
-git clone https://github.com/jkerry/nagios-foundation.git nagiosfoundation
+git clone https://github.com/ncr-devops-platform/nagios-foundation.git nagiosfoundation
 ```
 
 ### Set project directory

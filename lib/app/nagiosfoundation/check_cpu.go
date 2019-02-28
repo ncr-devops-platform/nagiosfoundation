@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/jkerry/nagiosfoundation/lib/pkg/cpu"
-	"github.com/jkerry/nagiosfoundation/lib/pkg/nagiosformatters"
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/cpu"
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/nagiosformatters"
 )
 
 // CheckCPUWithHandler gets the CPU load then emits a critical response

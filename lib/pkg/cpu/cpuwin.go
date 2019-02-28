@@ -3,7 +3,7 @@
 package cpu
 
 import (
-	"github.com/jkerry/nagiosfoundation/lib/pkg/perfcounters"
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/perfcounters"
 )
 
 func GetCPULoad() (float64, error) {
