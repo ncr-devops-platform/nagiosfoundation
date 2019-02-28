@@ -6,7 +6,7 @@
 A suite of Nagios style checks and metrics covering the basic needs for monitoring in a Sensu-like system.
 
 ## List of Checks
-* CPU
+* [CPU](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_cpu/README.md)
 * Memory
 * Performance Counter
 * [Process](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_process/README.md)
