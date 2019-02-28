@@ -3,7 +3,7 @@
 package main
 
 import (
-	"github.com/jkerry/nagiosfoundation/lib/app/nagiosfoundation"
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
 )
 
 func main() {
