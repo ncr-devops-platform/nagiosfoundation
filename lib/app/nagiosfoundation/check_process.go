@@ -114,38 +114,37 @@ func CheckProcessWithService(name string, checkType string, processService Proce
 // Returns are a text description of the response and an integer
 // return code indicating the response.
 func CheckProcessFlags(checkProcess func(string, string, ProcessService) (string, int), processService ProcessService) (string, int) {
-	if len(os.Args) <= 2 {
-		showHelp()
-		os.Exit(1)
-	}
-
-	namePtr := flag.String("name", "", "process name")
-	checkTypePtr := flag.String("type", "running", "type of check (currently only \"running\" is supported")
-	flag.Parse()
-
-	*checkTypePtr = strings.ToLower(*checkTypePtr)
-
-	invalidCmdMsg := ""
-
-	if *namePtr == "" {
-		invalidCmdMsg = invalidCmdMsg +
-			"A process name must be specified with the -name option."
-	}
-
-	if *checkTypePtr != "running" && *checkTypePtr != "notrunning" {
-		invalidCmdMsg = invalidCmdMsg +
-			fmt.Sprintf("Invalid check type (%s). Only \"running\" and \"notrunning\" are supported.",
-				*checkTypePtr)
-	}
-
 	var msg string
 	var retcode int
+	var invalidCmdMsg string
 
-	if invalidCmdMsg != "" {
-		msg = fmt.Sprintf("CheckProcess CRITICAL - %s", invalidCmdMsg)
+	if len(os.Args) <= 2 {
+		showHelp()
 		retcode = 2
 	} else {
-		msg, retcode = checkProcess(*namePtr, *checkTypePtr, processService)
+		namePtr := flag.String("name", "", "process name")
+		checkTypePtr := flag.String("type", "running", "type of check (currently only \"running\" is supported")
+		flag.Parse()
+
+		*checkTypePtr = strings.ToLower(*checkTypePtr)
+
+		invalidCmdMsg = ""
+
+		if *namePtr == "" {
+			invalidCmdMsg = invalidCmdMsg +
+				"A process name must be specified with the -name option."
+		} else if *checkTypePtr != "running" && *checkTypePtr != "notrunning" {
+			invalidCmdMsg = invalidCmdMsg +
+				fmt.Sprintf("Invalid check type (%s). Only \"running\" and \"notrunning\" are supported.",
+					*checkTypePtr)
+		}
+
+		if invalidCmdMsg != "" {
+			msg = fmt.Sprintf("CheckProcess CRITICAL - %s", invalidCmdMsg)
+			retcode = 2
+		} else {
+			msg, retcode = checkProcess(*namePtr, *checkTypePtr, processService)
+		}
 	}
 
 	return msg, retcode
@@ -157,6 +156,9 @@ func CheckProcessFlags(checkProcess func(string, string, ProcessService) (string
 func CheckProcess() {
 	msg, retcode := CheckProcessFlags(CheckProcessWithService, new(processHandler))
 
-	fmt.Println(msg)
+	if retcode >= 0 {
+		fmt.Println(msg)
+	}
+
 	os.Exit(retcode)
 }
