@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	nagiosfoundation.CheckProcessFlags()
+	nagiosfoundation.CheckProcess()
 }

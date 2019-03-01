@@ -107,19 +107,18 @@ func CheckProcessWithService(name string, checkType string, processService Proce
 	return msg, retcode
 }
 
-// CheckProcess will interrogate the OS for details on
-// a named process. The details of the interrogation
-// depend on the check type.
-func CheckProcess(name string, checkType string) (string, int) {
-	msg, retcode := CheckProcessWithService(name, checkType, new(processHandler))
+// CheckProcessFlags provides an injection entry point for
+// a check process function and a service. Command line flags
+// are used to determine the process and check type to execute.
+//
+// Returns are a text description of the response and an integer
+// return code indicating the response.
+func CheckProcessFlags(checkProcess func(string, string, ProcessService) (string, int), processService ProcessService) (string, int) {
+	if len(os.Args) <= 2 {
+		showHelp()
+		os.Exit(1)
+	}
 
-	return msg, retcode
-}
-
-// CheckProcessFlags provides an entry point with no
-// parameters. Instead it relies on command line flags for
-// the appropriate parameters and calls CheckProcess.
-func CheckProcessFlags() {
 	namePtr := flag.String("name", "", "process name")
 	checkTypePtr := flag.String("type", "running", "type of check (currently only \"running\" is supported")
 	flag.Parse()
@@ -130,22 +129,34 @@ func CheckProcessFlags() {
 
 	if *namePtr == "" {
 		invalidCmdMsg = invalidCmdMsg +
-			"A process name must be specified with the -name option.\n"
+			"A process name must be specified with the -name option."
 	}
 
 	if *checkTypePtr != "running" && *checkTypePtr != "notrunning" {
 		invalidCmdMsg = invalidCmdMsg +
-			fmt.Sprintf("Invalid check type (%s). Only \"running\" and \"notrunning\" are supported.\n",
+			fmt.Sprintf("Invalid check type (%s). Only \"running\" and \"notrunning\" are supported.",
 				*checkTypePtr)
 	}
 
-	if invalidCmdMsg != "" {
-		fmt.Printf("%s\n", invalidCmdMsg)
-		showHelp()
-	} else {
-		msg, retcode := CheckProcess(*namePtr, *checkTypePtr)
+	var msg string
+	var retcode int
 
-		fmt.Println(msg)
-		os.Exit(retcode)
+	if invalidCmdMsg != "" {
+		msg = fmt.Sprintf("CheckProcess CRITICAL - %s", invalidCmdMsg)
+		retcode = 2
+	} else {
+		msg, retcode = checkProcess(*namePtr, *checkTypePtr, processService)
 	}
+
+	return msg, retcode
+}
+
+// CheckProcess will interrogate the OS for details on
+// a named process. The details of the interrogation
+// depend on the check type.
+func CheckProcess() {
+	msg, retcode := CheckProcessFlags(CheckProcessWithService, new(processHandler))
+
+	fmt.Println(msg)
+	os.Exit(retcode)
 }
