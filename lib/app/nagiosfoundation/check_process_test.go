@@ -90,6 +90,14 @@ func TestCheckProcess(t *testing.T) {
 	}
 
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	os.Args = []string{pgmName, "-type", "dummytype"}
+	_, retcode = CheckProcessFlags(testCheckProcess, new(testProcessHandler))
+
+	if retcode != 2 {
+		t.Error("check process with no -name should return CRITICAL")
+	}
+
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	os.Args = []string{pgmName}
 	_, retcode = CheckProcessFlags(testCheckProcess, new(testProcessHandler))
 
