@@ -1,18 +1,22 @@
-// +build windows
-
 package nagiosfoundation
 
 import (
+	"errors"
 	"flag"
 	"fmt"
-	"log"
-	"os"
 
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/nagiosformatters"
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/perfcounters"
 )
 
-func CheckPerformanceCounter() {
+// CheckPerformanceCounterWithHandler fetches a performance counter
+// specified with the -counter_name flag. It then performs checks against
+// the value based on the threshold test specified along with the
+// warning and critical thresholds.
+//
+// Returns are a message stating the results of the check and a return
+// value from the check.
+func CheckPerformanceCounterWithHandler(perfCounterHandler func(string, int, int) (perfcounters.PerformanceCounter, error)) (string, int) {
 	var warning = flag.Float64("warning", 0, "the threshold to issue a warning alert")
 	var critical = flag.Float64("critical", 0, "the threshold to issue a critical alert")
 	var greaterThan = flag.Bool("greater_than", false, "issue warnings if the metric is greater than the expected thresholds")
@@ -23,20 +27,27 @@ func CheckPerformanceCounter() {
 	flag.Parse()
 	SetDefaultGlogStderr()
 
-	counter, err := perfcounters.ReadPerformanceCounter(*counterName, *pollingAttempts, *pollingDelay)
+	var msg string
+	var retcode int
+	var counter perfcounters.PerformanceCounter
+	var err error
+
+	if perfCounterHandler == nil {
+		err = errors.New("No ReadPerformanceCounter() service")
+	} else {
+		counter, err = perfCounterHandler(*counterName, *pollingAttempts, *pollingDelay)
+	}
+
 	if err == nil {
-		var msg string
-		var retcode int
 		if *greaterThan {
 			msg, retcode = nagiosformatters.GreaterFormatNagiosCheck(*counterName, counter.Value, *warning, *critical, *metricName)
-			fmt.Println(msg)
-			os.Exit(retcode)
+		} else {
+			msg, retcode = nagiosformatters.LesserFormatNagiosCheck(*counterName, counter.Value, *warning, *critical, *metricName)
 		}
-		msg, retcode = nagiosformatters.LesserFormatNagiosCheck(*counterName, counter.Value, *warning, *critical, *metricName)
-		fmt.Println(msg)
-		os.Exit(retcode)
 	} else {
-		log.Println(err)
-		os.Exit(3)
+		msg = fmt.Sprintf("%s CRITICAL - %s", *counterName, err)
+		retcode = 2
 	}
+
+	return msg, retcode
 }
