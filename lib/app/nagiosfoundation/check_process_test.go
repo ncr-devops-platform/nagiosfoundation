@@ -1,7 +1,9 @@
 package nagiosfoundation
 
 import (
+	"flag"
 	"fmt"
+	"os"
 	"testing"
 )
 
@@ -67,6 +69,52 @@ func TestCheckProcess(t *testing.T) {
 	if retcode != 3 {
 		t.Errorf("Invalid check type not detected with retcode %d", retcode)
 	}
+
+	// Test flags
+	// Save args and flagset for restoration
+	savedArgs := os.Args
+	savedFlagCommandLine := flag.CommandLine
+	pgmName := "TestCheckProcess"
+	testMsg := "Test Message"
+	testCheckProcess := func(name string, checkType string, processService ProcessService) (string, int) {
+		return testMsg, 0
+	}
+
+	// Reset the default flag set
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	os.Args = []string{pgmName, "-name", "dummyprocess"}
+	_, retcode = CheckProcessFlags(testCheckProcess, new(testProcessHandler))
+
+	if retcode != 0 {
+		t.Error("valid check process test should have returned OK")
+	}
+
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	os.Args = []string{pgmName, "-type", "dummytype"}
+	_, retcode = CheckProcessFlags(testCheckProcess, new(testProcessHandler))
+
+	if retcode != 2 {
+		t.Error("check process with no -name should return CRITICAL")
+	}
+
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	os.Args = []string{pgmName}
+	_, retcode = CheckProcessFlags(testCheckProcess, new(testProcessHandler))
+
+	if retcode != 2 {
+		t.Error("check process test with no parameters should have returned CRITICAL")
+	}
+
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	os.Args = []string{pgmName, "-name", "dummyprocess", "-type", "badtype"}
+	_, retcode = CheckProcessFlags(testCheckProcess, new(testProcessHandler))
+
+	if retcode != 2 {
+		t.Error("check process test with invalid type should have returned CRITICAL")
+	}
+
+	os.Args = savedArgs
+	flag.CommandLine = savedFlagCommandLine
 
 	showHelp()
 }
