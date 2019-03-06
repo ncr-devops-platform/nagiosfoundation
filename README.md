@@ -15,3 +15,6 @@ A suite of Nagios style checks and metrics covering the basic needs for monitori
 ---
 ## Building and Contributing
 See [Build Instructions](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/BUILDING.md)
+
+## Testing and Code Coverage
+See [Testing](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/TESTING.md)
