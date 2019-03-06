@@ -133,7 +133,6 @@ func TestHelperProcess(t *testing.T) {
 }
 
 func TestPowerShell(t *testing.T) {
-	fmt.Println("TestPowerShell()")
 	path := "/path/to/"
 
 	ps := newPowerShell(func(file string) (string, error) { return path + file, nil },
