@@ -33,4 +33,5 @@ $(platforms): build
 	mkdir -p $(package_bin)
 	ln ./out/build/*/$(version)*/$@/* $(package_bin)/.
 	tar -zcvf $(package_path)/nagiosfoundation-$@-$(version).tgz -C $(package_version)/$@ bin
+	(cd $(package_path) && sha512sum nagiosfoundation-$@-$(version).tgz) > $(package_path)/nagiosfoundation-$@-$(version)-sha512.txt
 	rm -rf $(package_version)
