@@ -7,5 +7,6 @@ import (
 )
 
 func main() {
+	nagiosfoundation.CheckExecutableVersion()
 	nagiosfoundation.CheckPerformanceCounter()
 }

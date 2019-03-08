@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
+	nagiosfoundation.CheckExecutableVersion()
 	nagiosfoundation.CheckProcess()
 }
