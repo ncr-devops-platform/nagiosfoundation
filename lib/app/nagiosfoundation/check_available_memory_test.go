@@ -1,7 +1,6 @@
 package nagiosfoundation
 
 import (
-	"errors"
 	"flag"
 	"os"
 	"testing"
@@ -9,8 +8,8 @@ import (
 
 func TestCheckAvailableMemory(t *testing.T) {
 	pgmName := "TestCheckAvailableMemory"
-	testReturnValid := func() (float64, error) { return 1000, nil }
-	testReturnError := func() (float64, error) { return 1000, errors.New("GetFreeMemory() failure") }
+	testReturnValid := func() uint64 { return uint64(50) }
+	testReturnZero := func() uint64 { return uint64(0) }
 
 	// Save args and flagset for restoration
 	savedArgs := os.Args
@@ -28,15 +27,33 @@ func TestCheckAvailableMemory(t *testing.T) {
 	// Valid memory service with flag defaults
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	msg, retcode = CheckAvailableMemoryWithHandler(testReturnValid)
+
 	if retcode != 0 || msg == "" {
 		t.Error("CheckAvailableMemoryWithHandler() failed with valid GetFreeMemory() call")
 	}
 
 	// Valid memory service but service returns error
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	msg, retcode = CheckAvailableMemoryWithHandler(testReturnError)
+	msg, retcode = CheckAvailableMemoryWithHandler(testReturnZero)
+
 	if retcode != 2 || msg == "" {
 		t.Error("CheckAvailableMemoryWithHandler() failed with valid GetFreeMemory() call")
+	}
+
+	os.Args = []string{pgmName, "-warning", "40"}
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	msg, retcode = CheckAvailableMemoryWithHandler(testReturnValid)
+
+	if retcode != 1 || msg == "" {
+		t.Error("CheckAvailableMemoryWithHandler() should have emitted WARNING")
+	}
+
+	os.Args = []string{pgmName, "-critical", "45"}
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	msg, retcode = CheckAvailableMemoryWithHandler(testReturnValid)
+
+	if retcode != 2 || msg == "" {
+		t.Error("CheckAvailableMemoryWithHandler() should have emitted CRITICAL")
 	}
 
 	os.Args = savedArgs
