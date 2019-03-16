@@ -11,6 +11,7 @@ package: $(platforms)
 clean:
 	./godelw clean
 	rm -rf $(package_path)
+	rm -f coverage.txt coverage.html
 
 test:
 	go test -v ./...
