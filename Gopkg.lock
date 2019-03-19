@@ -29,7 +29,13 @@
   revision = "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
 
 [[projects]]
-  branch = "master"
+  digest = "1:5f81e80915d9312397c603b6da6f751a4ae36ae2b4d4f0474a34241d95738686"
+  name = "github.com/pbnjay/memory"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "974d429e7ae40c89e7dcd41cfcc22a0bfbe42510"
+
+[[projects]]
   digest = "1:c4f2aacac0b737ab10dbb1ef6ecd371b22567de2166319357153af81ff0249a5"
   name = "golang.org/x/sys"
   packages = ["windows"]
@@ -42,6 +48,7 @@
   input-imports = [
     "github.com/StackExchange/wmi",
     "github.com/golang/glog",
+    "github.com/pbnjay/memory",
     "golang.org/x/sys/windows",
   ]
   solver-name = "gps-cdcl"
