@@ -7,8 +7,6 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
-
-	"github.com/golang/glog"
 )
 
 // PerformanceCounter is a struct that contains the name
@@ -71,21 +69,9 @@ func ReadPerformanceCounterWithHandler(poshService powerShellService, counter st
 		"Select-Object -ExpandProperty CookedValue |\n" +
 		"Measure-Object -Average).Average"
 
-	if glog.V(2) {
-		glog.Infof("Generated powershell performance monitor command:\n%s\n", command)
-	}
-
 	stdout, _, err := poshService.Execute(command)
 
-	if glog.V(2) {
-		glog.Infof("powershell output: \n\n %v", stdout)
-	}
-
 	if err != nil {
-		if glog.V(1) {
-			glog.Errorf("Error running powershell script to retrieve performance counter values: %v", err)
-		}
-
 		return perfcounter, err
 	}
 
@@ -93,10 +79,6 @@ func ReadPerformanceCounterWithHandler(poshService powerShellService, counter st
 	avgValue, err := strconv.ParseFloat(trimmedStdout, 64)
 
 	if err != nil {
-		if glog.V(1) {
-			glog.Errorf("Could not parse %s to float64: %v", stdout, err)
-		}
-
 		return perfcounter, err
 	}
 

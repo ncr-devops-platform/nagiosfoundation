@@ -145,5 +145,5 @@ func TestActualIs(t *testing.T) {
 	}
 
 	// Check help
-	showHelp()
+	GetHelpService()
 }

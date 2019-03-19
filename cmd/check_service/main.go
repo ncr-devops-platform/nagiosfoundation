@@ -1,11 +1,7 @@
 package main
 
-import (
-	nf "github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
-	nagiosfoundation "github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation/check_service"
-)
+import "github.com/ncr-devops-platform/nagiosfoundation/cmd/check_service/cmd"
 
 func main() {
-	nf.CheckExecutableVersion()
-	nagiosfoundation.CheckService()
+	cmd.Execute()
 }

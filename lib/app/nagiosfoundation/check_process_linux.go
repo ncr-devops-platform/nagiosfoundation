@@ -2,12 +2,8 @@
 
 package nagiosfoundation
 
-import (
-	"fmt"
-)
-
-func showHelpOsConstrained() {
-	fmt.Println("\nNote: Process names in POSIX systems are case sensitive.")
+func getHelpOsConstrained() string {
+	return "\nNote: Process names in POSIX systems are case sensitive."
 }
 
 func isProcessRunningOsConstrained(name string) bool {

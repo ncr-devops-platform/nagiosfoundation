@@ -2,9 +2,7 @@ package nagiosfoundation
 
 import (
 	"errors"
-	"flag"
 	"fmt"
-	"os"
 	"strings"
 )
 
@@ -134,34 +132,15 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 	return msg, retcode
 }
 
-// Show operating system independent help.
-func showHelp() {
-	fmt.Printf(
-		`check_service -name <service name> [ other options ]
-  Perform various checks for a service. These checks depend on the options given and
-  the -name option is always required.
-
-    -name <service name>: Required. The name of the service to check
-`)
-	showHelpOsConstrained()
+// GetHelpService returns operating system independent help.
+func GetHelpService() string {
+	return `Perform various checks for a service. These checks depend on the options given and
+the --name (-n) option is always required.
+` + showHelpOsConstrained()
 }
 
-// Check on a service. The executed functionality depends on the
-// command line arguments given. The help text gives a good
-// explanation of the arguments.
-func CheckService() {
-	if len(os.Args) < 2 {
-		showHelp()
-		os.Exit(0)
-	}
-
-	var name = flag.String("name", "", "the name of the service to check")
-	var state = flag.String("state", "", "the desired state of the service")
-	var user = flag.String("user", "", "the user the service should run as")
-	var manager = flag.String("manager", "", "the name of local service manager. Allowed options are: systemd")
-	flag.Parse()
-
-	//fmt.Println("Checking Name:", *name, "State:", *state, "User:", *user, "Manager:", *manager)
-
-	checkServiceOsConstrained(*name, *state, *user, *manager)
+// CheckService checks a service based on name, state,
+// user, and manager
+func CheckService(name, state, user, manager string) {
+	checkServiceOsConstrained(name, state, user, manager)
 }

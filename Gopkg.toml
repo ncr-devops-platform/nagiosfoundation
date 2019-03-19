@@ -42,5 +42,9 @@
   revision = "90b0e4468f9980bf79a2290394adaf7f045c5d24"
 
 [[constraint]]
+  name = "github.com/spf13/cobra"
+  revision = "ba1052d4cbce7aac421a96de820558f75199ccbc"
+  
+[[constraint]]
   name = "github.com/pbnjay/memory"
   revision = "974d429e7ae40c89e7dcd41cfcc22a0bfbe42510"

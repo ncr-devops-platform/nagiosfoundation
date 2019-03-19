@@ -3,10 +3,9 @@
 package main
 
 import (
-	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
+	"github.com/ncr-devops-platform/nagiosfoundation/cmd/check_performance_counter/cmd"
 )
 
 func main() {
-	nagiosfoundation.CheckExecutableVersion()
-	nagiosfoundation.CheckPerformanceCounter()
+	cmd.Execute()
 }

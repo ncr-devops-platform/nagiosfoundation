@@ -10,23 +10,23 @@
   version = "1.0.0"
 
 [[projects]]
-  digest = "1:c96d16a4451e48e2c44b2c3531fd8ec9248d822637f1911a88959ca0bcae4a64"
+  digest = "1:440028f55cb322d8cb5b9d5ebec298a00b7d74690a658fe6b1c0c0b44341bfae"
   name = "github.com/go-ole/go-ole"
   packages = [
     ".",
     "oleutil",
   ]
   pruneopts = "UT"
-  revision = "39dc8486bd0952279431257138bc428275b86797"
-  version = "v1.2.2"
+  revision = "97b6244175ae18ea6eef668034fd6565847501c9"
+  version = "v1.2.4"
 
 [[projects]]
-  branch = "master"
-  digest = "1:1ba1d79f2810270045c328ae5d674321db34e3aae468eb4233883b473c5c0467"
-  name = "github.com/golang/glog"
+  digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
+  name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   pruneopts = "UT"
-  revision = "23def4e6c14b4da8ac2ed8007337bc5eb5007998"
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+  version = "v1.0"
 
 [[projects]]
   digest = "1:5f81e80915d9312397c603b6da6f751a4ae36ae2b4d4f0474a34241d95738686"
@@ -34,6 +34,21 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "974d429e7ae40c89e7dcd41cfcc22a0bfbe42510"
+
+[[projects]]
+  digest = "1:9fb64875be1386e75492979fbec6a89ebf1639fefd08ca85f37868944acf4ab6"
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ba1052d4cbce7aac421a96de820558f75199ccbc"
+
+[[projects]]
+  digest = "1:c1b1102241e7f645bc8e0c22ae352e8f0dc6484b6cb4d132fa9f24174e0119e2"
+  name = "github.com/spf13/pflag"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "298182f68c66c05229eb03ac171abe6e309ee79a"
+  version = "v1.0.3"
 
 [[projects]]
   digest = "1:c4f2aacac0b737ab10dbb1ef6ecd371b22567de2166319357153af81ff0249a5"
@@ -47,8 +62,8 @@
   analyzer-version = 1
   input-imports = [
     "github.com/StackExchange/wmi",
-    "github.com/golang/glog",
     "github.com/pbnjay/memory",
+    "github.com/spf13/cobra",
     "golang.org/x/sys/windows",
   ]
   solver-name = "gps-cdcl"

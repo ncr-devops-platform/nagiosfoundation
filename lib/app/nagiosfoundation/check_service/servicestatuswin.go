@@ -63,18 +63,16 @@ func checkServiceOsConstrained(name string, state string, user string, manager s
 }
 
 // Show help specific to the operating system.
-func showHelpOsConstrained() {
-	fmt.Printf(`    -state <service state>: State to check. Examples: running, stopped
-    -user <user name>: User to check. Example: "NT AUTHORITY\LocalService"
-
-    Some examples:
-      check_service.exe -name audiosrv
-        Checks for the service to exist and shows the service state and user.
-      check_service.exe -name audiosrv -state running
-        Checks for the service in the running state.
-      check_service.exe -name audiosrv -state running -user "NT AUTHORITY\LocalService"
-        Checks for the service in the running state and running as user.
-      check_service.exe -name audiosrv -user "NT AUTHORITY\LocalService"
-        Checks for the service to exist and would be run as user.
-`)
+func showHelpOsConstrained() string {
+	return `
+Some examples:
+  check_service.exe --name audiosrv
+    Checks for the service to exist and shows the service state and user.
+  check_service.exe --name audiosrv --state running
+    Checks for the service in the running state.
+  check_service.exe --name audiosrv --state running --user "NT AUTHORITY\LocalService"
+    Checks for the service in the running state and running as user.
+  check_service.exe --name audiosrv --user "NT AUTHORITY\LocalService"
+    Checks for the service to exist and would be run as user.
+`
 }
