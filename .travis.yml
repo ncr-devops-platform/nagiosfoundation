@@ -16,3 +16,14 @@ install:
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic -v ./... && bash <(curl -s https://codecov.io/bash)
   - make package
+
+deploy:
+  provider: releases
+  api_key:
+    secure: BTtv1betWObLQiFJNKtIfaNtOSgkqqQvwYKwlGHRigRq7/+20F20xo/UKJJaMam7VmHM/+lHA+yYUDyX+YzUoURY5BxY+8QBs6FuqafoMZR5P2zsx2drFxumrqpFYrCpEQjSB+tCwyNQ+CdiuJBapRG/98ePco/VyIMgGNHa9swkxTvq0YFUheLIrBXvdeYWtew6p4FRQlcmUt9EtSOaKJ6x3mDhLa9MfLCo+0izE/dB0YrxJPCTIBQ0+eFvIU9Dw8mhCncwwfeRu6GPOeMVDA2htRwmlQt15V+a1oYlZfvp26Ga0jBljq0zAjMd/EEf9e4/Xk/Rdcl6BJ6863VVza44+8YeDNVanM4lKDrU9RTKVlVgk+r/BWKgH/EbWiTqDm7GE1hoZnfjp08TIQ0NAbLgIurOEPw6HICn4B5RpAuRtDKg+lvIi5aALgvZN2LSQ5h4vHITuebPGFtVRynd6iq2DkkwUYS/6PaGfBerMBJD/hH2ELiROcKh2p6Wyp6on8SIf+M+NouBnL9vJ6mr4Bw7ATz42H//3ITLdiC0uFY3iD0ObaGOVGX0P/j3AXK0bri8rnU8k5xT81awbX3/cjZK8hg++hRRKcWViQX7fXW8XxRtYvpnGGtMrZNITpR97aSL/qjPE2ERXqRkRPksJt8Qx7WwKzLBNYwdXZ7olrY=
+  file_glob: true
+  file: out/package/*
+  skip_cleanup: true
+  draft: true
+  on:
+    tags: true
