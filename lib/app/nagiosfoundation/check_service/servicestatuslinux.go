@@ -78,12 +78,3 @@ func checkServiceOsConstrained(name string, state string, user string, manager s
 	fmt.Println(msg)
 	os.Exit(retcode)
 }
-
-// Show help specific to the operating system.
-func showHelpOsConstrained() string {
-	return `
-The only check done is for a running state. Both the --name (-n) and
--manager (-m) options must be specified and the service is only checked
-to see if it is running.
-`
-}

@@ -18,7 +18,8 @@ func Execute() {
 	var rootCmd = &cobra.Command{
 		Use:   "check_service",
 		Short: "Determine if a service is running.",
-		Long:  nf.GetHelpService(),
+		Long: `Perform various checks for a service. These checks depend on the options
+given and the --name (-n) option is always required.` + getHelpOsConstrained(),
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
 

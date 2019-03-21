@@ -18,7 +18,13 @@ func Execute() {
 	var rootCmd = &cobra.Command{
 		Use:   "check_performance_counter",
 		Short: "Retrieve and compare values on a performance counter.",
-		Long:  nagiosfoundation.GetHelpPerformanceCounter(),
+		Long: `The performance counter check is Windows only. It retrieves a Windows Performance Counter
+(--counter_name) and compares it to --critical and --warning then outputs an appropriate response
+based on the check. Many flags make this check quite configurable.
+
+The defaults for this check have the --critical and --warning values set to 0, and the counter value
+retrieved is compared to be lesser than those values. Generally a counter value will be > 0, causing
+this check to emit an OK response when using these defaults.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
 

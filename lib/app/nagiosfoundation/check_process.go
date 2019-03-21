@@ -136,15 +136,6 @@ func (p ProcessCheck) IsProcessRunning() bool {
 	return p.ProcessCheckHandler.IsProcessRunning(p.ProcessName)
 }
 
-// GetHelpProcess returns help
-func GetHelpProcess() string {
-	return `Perform a check for a process by name to determine if the process
-is running or not running. The default is to check for a running process.
-
-The --name (-n) option is always required.
-` + getHelpOsConstrained()
-}
-
 func checkRunning(processCheck ProcessCheck, invert bool) (string, int) {
 	var msg string
 	var retcode int
@@ -201,23 +192,23 @@ func checkProcessWithService(name string, checkType string, processService Proce
 // a named process. The details of the interrogation
 // depend on the check type.
 func checkProcessCmd(name string, checkType string, checkProcess func(string, string, ProcessService) (string, int), processService ProcessService) (string, int) {
-	var invalidCmdMsg string
+	var invalidParametersMsg string
 	var msg string
 	var retcode int
 
 	checkType = strings.ToLower(checkType)
 
 	if name == "" {
-		invalidCmdMsg = invalidCmdMsg +
-			"A process name must be specified with the --name (-n) option."
+		invalidParametersMsg = invalidParametersMsg +
+			"A process name must be specified."
 	} else if checkType != "running" && checkType != "notrunning" {
-		invalidCmdMsg = invalidCmdMsg +
+		invalidParametersMsg = invalidParametersMsg +
 			fmt.Sprintf("Invalid check type (%s). Only \"running\" and \"notrunning\" are supported.",
 				checkType)
 	}
 
-	if invalidCmdMsg != "" {
-		msg = fmt.Sprintf("CheckProcess CRITICAL - %s", invalidCmdMsg)
+	if invalidParametersMsg != "" {
+		msg = fmt.Sprintf("CheckProcess CRITICAL - %s", invalidParametersMsg)
 		retcode = 2
 	} else {
 		msg, retcode = checkProcess(name, checkType, processService)
@@ -226,7 +217,8 @@ func checkProcessCmd(name string, checkType string, checkProcess func(string, st
 	return msg, retcode
 }
 
-// CheckProcess checks for you
+// CheckProcess finds a process by name to determine
+// if it is running or not running.
 func CheckProcess(name string, checkType string) {
 	msg, retcode := checkProcessCmd(name, checkType, checkProcessWithService, new(processHandler))
 

@@ -8,7 +8,7 @@ import (
 )
 
 // CheckPerformanceCounter executes CheckPerformanceCounterWitHandler(),
-// passing it the OS constranted ReadPerformanceCounter() function, prints
+// passing it the OS constrained ReadPerformanceCounter() function, prints
 // the returned message and exits with the returned exit code.
 func CheckPerformanceCounter(warning, critical float64, greaterThan bool, pollingAttempts, pollingDelay int, metricName, counterName string) {
 	msg, retval := CheckPerformanceCounterWithHandler(warning,

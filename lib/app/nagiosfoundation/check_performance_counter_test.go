@@ -42,6 +42,4 @@ func TestCheckPerformanceCounter(t *testing.T) {
 	if retcode != 2 || msg == "" {
 		t.Error("CheckPerformanceCounterWithHandler() failed with error return from service")
 	}
-
-	GetHelpPerformanceCounter()
 }

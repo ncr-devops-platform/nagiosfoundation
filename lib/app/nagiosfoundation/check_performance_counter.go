@@ -8,22 +8,10 @@ import (
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/perfcounters"
 )
 
-// GetHelpPerformanceCounter returns a string containing help for the
-// performance counter functionality.
-func GetHelpPerformanceCounter() string {
-	return `The performance counter check is Windows only. It retrieves a Windows Performance Counter
-(--counter_name) and compares it to --critical and --warning then outputs an appropriate response
-based on the check. Many flags make this check quite configurable.
-
-The defaults for this check have the --critical and --warning values set to 0, and the counter value
-retrieved is compared to be lesser than those values. Generally a counter value will be > 0, causing
-this check to generally emit an OK response when using these defaults.`
-}
-
 // CheckPerformanceCounterWithHandler fetches a performance counter
-// specified with the -counter_name flag. It then performs checks against
-// the value based on the threshold test specified along with the
-// warning and critical thresholds.
+// specified with the counterName parameter. It then performs checks
+// against the value based on the threshold test specified along with
+// the warning and critical thresholds.
 //
 // Returns are a message stating the results of the check and a return
 // value from the check.

@@ -19,10 +19,6 @@ func uint16SliceToString(array []uint16) string {
 	return syscall.UTF16ToString(array[:end])
 }
 
-func getHelpOsConstrained() string {
-	return "\nNote: Process names in Windows are not case sensitive."
-}
-
 func isProcessRunningOsConstrained(name string) bool {
 	retval := false
 

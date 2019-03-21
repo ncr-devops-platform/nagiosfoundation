@@ -143,7 +143,4 @@ func TestActualIs(t *testing.T) {
 	if err == nil {
 		t.Errorf("GetInfo() returned no error but had a nil handler")
 	}
-
-	// Check help
-	GetHelpService()
 }

@@ -15,7 +15,11 @@ func Execute() {
 	var rootCmd = &cobra.Command{
 		Use:   "check_process",
 		Short: "Determine if a process is running.",
-		Long:  nagiosfoundation.GetHelpProcess(),
+		Long: `Perform a check for a process by name to determine if the process
+is running or not running. The default is to check for a running process.
+
+The --name (-n) option is always required.
+` + getHelpOsConstrained(),
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
 			nagiosfoundation.CheckProcess(name, checkType)

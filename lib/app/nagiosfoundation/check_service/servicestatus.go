@@ -132,13 +132,6 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 	return msg, retcode
 }
 
-// GetHelpService returns operating system independent help.
-func GetHelpService() string {
-	return `Perform various checks for a service. These checks depend on the options given and
-the --name (-n) option is always required.
-` + showHelpOsConstrained()
-}
-
 // CheckService checks a service based on name, state,
 // user, and manager
 func CheckService(name, state, user, manager string) {

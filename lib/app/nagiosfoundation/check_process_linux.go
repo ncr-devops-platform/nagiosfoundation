@@ -2,10 +2,6 @@
 
 package nagiosfoundation
 
-func getHelpOsConstrained() string {
-	return "\nNote: Process names in POSIX systems are case sensitive."
-}
-
 func isProcessRunningOsConstrained(name string) bool {
 	retVal := false
 
