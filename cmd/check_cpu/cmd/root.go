@@ -22,7 +22,10 @@ above --warning percentage, issue a WARNING response. If it's below both
 of these, an OK response is issued.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
-			nagiosfoundation.CheckCPU(warning, critical, metricName)
+			msg, retval := nagiosfoundation.CheckCPU(warning, critical, metricName)
+
+			fmt.Println(msg)
+			os.Exit(retval)
 		},
 	}
 

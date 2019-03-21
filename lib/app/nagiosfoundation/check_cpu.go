@@ -5,7 +5,6 @@ package nagiosfoundation
 import (
 	"errors"
 	"fmt"
-	"os"
 
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/cpu"
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/nagiosformatters"
@@ -43,9 +42,6 @@ func CheckCPUWithHandler(warning, critical int, metricName string, cpuHandler fu
 // CheckCPU executes CheckCPUWithHandler(), passing it the OS
 // constrained GetCPULoad() function, prints the returned message
 // and exits with the returned exit code.
-func CheckCPU(warning, critical int, metricName string) {
-	msg, retval := CheckCPUWithHandler(warning, critical, metricName, cpu.GetCPULoad)
-
-	fmt.Println(msg)
-	os.Exit(retval)
+func CheckCPU(warning, critical int, metricName string) (string, int) {
+	return CheckCPUWithHandler(warning, critical, metricName, cpu.GetCPULoad)
 }
