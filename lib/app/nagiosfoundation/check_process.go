@@ -2,7 +2,6 @@ package nagiosfoundation
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -137,20 +136,6 @@ func (p ProcessCheck) IsProcessRunning() bool {
 	return p.ProcessCheckHandler.IsProcessRunning(p.ProcessName)
 }
 
-func showHelp() {
-	fmt.Printf(
-		`check_process -name <process name> [ other options ]
-  Perform various checks for a process. These checks depend on the -check-type
-  flag which defaults to "running". The -name option is always required.
-
-	-name <process name>: Required. The name of the process to check
-	-type <check type>: Defaults to "running". Supported types are "running"
-	  "notrunning".
-`)
-
-	showHelpOsConstrained()
-}
-
 func checkRunning(processCheck ProcessCheck, invert bool) (string, int) {
 	var msg string
 	var retcode int
@@ -177,11 +162,11 @@ func checkRunning(processCheck ProcessCheck, invert bool) (string, int) {
 	return msg, retcode
 }
 
-// CheckProcessWithService provides a way to inject a custom
+// checkProcessWithService provides a way to inject a custom
 // service for interrogating the OS for the named process.
 // This is mainly used for testing but can also be used for any
 // application wishing to override the normal interrogations.
-func CheckProcessWithService(name string, checkType string, processService ProcessService) (string, int) {
+func checkProcessWithService(name string, checkType string, processService ProcessService) (string, int) {
 	pc := ProcessCheck{
 		ProcessName:         name,
 		ProcessCheckHandler: processService,
@@ -203,54 +188,39 @@ func CheckProcessWithService(name string, checkType string, processService Proce
 	return msg, retcode
 }
 
-// CheckProcessFlags provides an injection entry point for
-// a check process function and a service. Command line flags
-// are used to determine the process and check type to execute.
-//
-// Returns are a text description of the response and an integer
-// return code indicating the response.
-func CheckProcessFlags(checkProcess func(string, string, ProcessService) (string, int), processService ProcessService) (string, int) {
+// checkProcessCmd will interrogate the OS for details on
+// a named process. The details of the interrogation
+// depend on the check type.
+func checkProcessCmd(name string, checkType string, checkProcess func(string, string, ProcessService) (string, int), processService ProcessService) (string, int) {
+	var invalidParametersMsg string
 	var msg string
 	var retcode int
-	var invalidCmdMsg string
 
-	if len(os.Args) <= 2 {
-		showHelp()
+	checkType = strings.ToLower(checkType)
+
+	if name == "" {
+		invalidParametersMsg = invalidParametersMsg +
+			"A process name must be specified."
+	} else if checkType != "running" && checkType != "notrunning" {
+		invalidParametersMsg = invalidParametersMsg +
+			fmt.Sprintf("Invalid check type (%s). Only \"running\" and \"notrunning\" are supported.",
+				checkType)
+	}
+
+	if invalidParametersMsg != "" {
+		msg = fmt.Sprintf("CheckProcess CRITICAL - %s", invalidParametersMsg)
 		retcode = 2
 	} else {
-		namePtr := flag.String("name", "", "process name")
-		checkTypePtr := flag.String("type", "running", "type of check (currently only \"running\" is supported")
-		flag.Parse()
-
-		*checkTypePtr = strings.ToLower(*checkTypePtr)
-
-		invalidCmdMsg = ""
-
-		if *namePtr == "" {
-			invalidCmdMsg = invalidCmdMsg +
-				"A process name must be specified with the -name option."
-		} else if *checkTypePtr != "running" && *checkTypePtr != "notrunning" {
-			invalidCmdMsg = invalidCmdMsg +
-				fmt.Sprintf("Invalid check type (%s). Only \"running\" and \"notrunning\" are supported.",
-					*checkTypePtr)
-		}
-
-		if invalidCmdMsg != "" {
-			msg = fmt.Sprintf("CheckProcess CRITICAL - %s", invalidCmdMsg)
-			retcode = 2
-		} else {
-			msg, retcode = checkProcess(*namePtr, *checkTypePtr, processService)
-		}
+		msg, retcode = checkProcess(name, checkType, processService)
 	}
 
 	return msg, retcode
 }
 
-// CheckProcess will interrogate the OS for details on
-// a named process. The details of the interrogation
-// depend on the check type.
-func CheckProcess() {
-	msg, retcode := CheckProcessFlags(CheckProcessWithService, new(processHandler))
+// CheckProcess finds a process by name to determine
+// if it is running or not running.
+func CheckProcess(name string, checkType string) {
+	msg, retcode := checkProcessCmd(name, checkType, checkProcessWithService, new(processHandler))
 
 	if retcode >= 0 {
 		fmt.Println(msg)

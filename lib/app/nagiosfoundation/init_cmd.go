@@ -7,6 +7,8 @@ import (
 	"os"
 	"runtime"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 // The command name and version are injected into
@@ -47,7 +49,6 @@ func SetDefaultGlogStderr() {
 }
 
 // GetVersion returns the executable version as a string
-//
 func GetVersion() string {
 	const unknown = "<unknown>"
 
@@ -90,4 +91,16 @@ func CheckExecutableVersion() {
 	if ShowVersion(os.Stdout) {
 		os.Exit(0)
 	}
+}
+
+// AddVersionCommand adds the version command via Cobra
+func AddVersionCommand(cmd *cobra.Command) {
+	cmd.AddCommand(&cobra.Command{
+		Use:   "version",
+		Short: "Print the version",
+		Long:  "Print the version and OS/arch.",
+		Run: func(cmd *cobra.Command, args []string) {
+			ShowVersion(os.Stdout)
+		},
+	})
 }

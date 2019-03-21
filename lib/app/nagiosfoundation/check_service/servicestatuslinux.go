@@ -64,16 +64,6 @@ func systemdServiceTest(serviceName string) (string, int) {
 }
 
 func checkServiceOsConstrained(name string, state string, user string, manager string) {
-	if manager == "" {
-		fmt.Fprintln(os.Stderr, "A service manager must be specified. Currently only systemd is supported.")
-		os.Exit(0)
-	}
-	if state != "" || user != "" {
-		fmt.Fprintln(os.Stderr, "Linux functionality is limited to only checking for a running state.")
-		fmt.Fprintln(os.Stderr, "The -state and -user options are not used but at least one of the options was given.")
-		os.Exit(0)
-	}
-
 	var msg string
 	var retcode int
 
@@ -81,20 +71,10 @@ func checkServiceOsConstrained(name string, state string, user string, manager s
 	case "systemd":
 		msg, retcode = systemdServiceTest(name)
 	default:
-		msg = fmt.Sprintf("CheckServiceRunning CRITICAL - %s not in a valid service manager.", manager)
+		msg = fmt.Sprintf("CheckServiceRunning CRITICAL - %s is not a valid service manager.", manager)
 		retcode = 3
 	}
 
 	fmt.Println(msg)
 	os.Exit(retcode)
-}
-
-// Show help specific to the operating system.
-func showHelpOsConstrained() {
-	fmt.Printf(`    -manager <service manager>: Required. The service manager executed for the check.
-	  systemd is the only supported service manager
-
-    The only check done is for a running state. Both the -name and -manager options must
-    be specified the the service is only checked to see if it is running.
-`)
 }

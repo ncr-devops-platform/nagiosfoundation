@@ -12,7 +12,9 @@ A suite of Nagios style checks and metrics covering the basic needs for monitori
 * [Process](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_process/README.md)
 * [Service](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_service/README.md)
 * [User and Group](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_user_group/README.md)
+
 ---
+
 ## Building and Contributing
 See [Build Instructions](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/BUILDING.md)
 

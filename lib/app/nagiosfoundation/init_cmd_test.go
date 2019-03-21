@@ -6,6 +6,8 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+
+	"github.com/spf13/cobra"
 )
 
 func TestSetFlagIfNotProvided(t *testing.T) {
@@ -82,6 +84,14 @@ func TestVersion(t *testing.T) {
 		t.Errorf("Version string returned is not correct. Expected result: %s Actual Result: %s",
 			expectedResult,
 			s.String())
+	}
+
+	testCmd := &cobra.Command{}
+	AddVersionCommand(testCmd)
+	cmdList := testCmd.Commands()
+	cmdList[0].Execute()
+	if cmdList[0].Use != "version" {
+		t.Error("version command did not load into Cobra")
 	}
 
 	os.Args = savedArgs

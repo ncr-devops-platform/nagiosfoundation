@@ -2,7 +2,6 @@ package perfcounters
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -40,17 +39,9 @@ func (pss testPowerShellService) Execute(args ...string) (string, string, error)
 }
 
 func TestReadPerformanceCounter(t *testing.T) {
-	pgmName := "TestReadPerformanceCounter"
 	counterName := "TestCounter"
 	type pss struct {
 	}
-
-	// Save args and flagset for restoration
-	savedArgs := os.Args
-	savedFlagCommandLine := flag.CommandLine
-
-	os.Args = []string{pgmName, "-v", "2"}
-	flag.Parse()
 
 	svc := new(testPowerShellService)
 
@@ -106,8 +97,6 @@ func TestReadPerformanceCounter(t *testing.T) {
 		t.Error("Powershell service returned an error but ReadPerformanceCounterWithHandler did not pass it up")
 	}
 
-	os.Args = savedArgs
-	flag.CommandLine = savedFlagCommandLine
 	nul.Close()
 }
 
