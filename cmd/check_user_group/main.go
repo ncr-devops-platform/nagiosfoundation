@@ -1,10 +1,7 @@
 package main
 
-import (
-	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
-)
+import "github.com/ncr-devops-platform/nagiosfoundation/cmd/check_user_group/cmd"
 
 func main() {
-	nagiosfoundation.CheckExecutableVersion()
-	nagiosfoundation.CheckUserGroupFlagsWithExit()
+	cmd.Execute()
 }

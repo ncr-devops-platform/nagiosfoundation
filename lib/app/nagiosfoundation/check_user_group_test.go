@@ -2,8 +2,6 @@ package nagiosfoundation
 
 import (
 	"errors"
-	"flag"
-	"os"
 	"os/user"
 	"testing"
 )
@@ -142,32 +140,20 @@ func TestCheckUserGroup(t *testing.T) {
 }
 
 func TestCheckUserGroupWithFlags(t *testing.T) {
-	pgmName := "TestCheckUserGroupWithFlags"
-	savedArgs := os.Args
-	savedFlagCommandLine := flag.CommandLine
 	handler := new(userGroupTestHandler)
 
-	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	os.Args = []string{pgmName, "-" + "user", goodUserGroupString}
-	_, err := CheckUserGroupFlagsWithHandler(handler)
+	_, err := CheckUserGroupWithHandler(goodUserGroupString, "", handler)
 	if err != 0 {
 		t.Error("CheckUserGroup with -user flag failed")
 	}
 
-	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	os.Args = []string{pgmName, "-" + "group", goodUserGroupString}
-	_, err = CheckUserGroupFlagsWithHandler(handler)
+	_, err = CheckUserGroupWithHandler("", goodUserGroupString, handler)
 	if err != 0 {
 		t.Error("CheckUserGroup with -group flag failed")
 	}
 
-	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	os.Args = []string{pgmName, "-" + "user", goodUserGroupString, "-" + "group", goodUserGroupString}
-	_, err = CheckUserGroupFlagsWithHandler(handler)
+	_, err = CheckUserGroupWithHandler(goodUserGroupString, goodUserGroupString, handler)
 	if err != 0 {
 		t.Error("CheckUserGroup with -user and -group flags failed")
 	}
-
-	os.Args = savedArgs
-	flag.CommandLine = savedFlagCommandLine
 }
