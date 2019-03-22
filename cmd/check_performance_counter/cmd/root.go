@@ -28,8 +28,11 @@ this check to emit an OK response when using these defaults.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
 
-			nagiosfoundation.CheckPerformanceCounter(warning, critical, greaterThan, pollingAttempts,
+			msg, retval := nagiosfoundation.CheckPerformanceCounter(warning, critical, greaterThan, pollingAttempts,
 				pollingDelay, metricName, counterName)
+
+			fmt.Println(msg)
+			os.Exit(retval)
 		},
 	}
 
