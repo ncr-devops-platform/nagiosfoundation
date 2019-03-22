@@ -67,7 +67,7 @@ func TestCheckProcess(t *testing.T) {
 
 	// Invalid check type
 	_, retcode = checkProcessWithService(testProcessGoodName, "", new(testProcessHandler))
-	if retcode != 3 {
+	if retcode != 2 {
 		t.Errorf("Invalid check type not detected with retcode %d", retcode)
 	}
 
