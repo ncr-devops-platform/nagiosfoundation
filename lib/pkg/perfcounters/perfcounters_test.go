@@ -33,6 +33,10 @@ func (pss testPowerShellService) Execute(args ...string) (string, string, error)
 		stdOut = testPerfCounterValue
 		stdErr = ""
 		err = errors.New("testPowerShellService Error")
+	case 4:
+		stdOut = "unparseable float data"
+		stdErr = ""
+		err = nil
 	}
 
 	return stdOut, stdErr, err
@@ -47,13 +51,6 @@ func TestReadPerformanceCounter(t *testing.T) {
 
 	var pcResult PerformanceCounter
 	var err error
-	var nul *os.File
-
-	stdErr := os.Stderr
-
-	if nul, err = os.OpenFile(os.DevNull, os.O_WRONLY, 0444); err != nil {
-		nul = os.Stderr
-	}
 
 	// Passing no handler should yield an error
 	_, err = ReadPerformanceCounterWithHandler(nil, counterName, 0, 0)
@@ -64,9 +61,7 @@ func TestReadPerformanceCounter(t *testing.T) {
 
 	// Not returning a number should yield an error
 	svc.testType = 1
-	os.Stderr = nul
 	_, err = ReadPerformanceCounterWithHandler(svc, counterName, 0, 0)
-	os.Stderr = stdErr
 	if err == nil {
 		t.Error("Powershell service returning empty string did not yield an error")
 	}
@@ -90,14 +85,17 @@ func TestReadPerformanceCounter(t *testing.T) {
 
 	// Returning an error should bubble back up
 	svc.testType = 3
-	os.Stderr = nul
 	_, err = ReadPerformanceCounterWithHandler(svc, counterName, 0, 0)
-	os.Stderr = stdErr
 	if err == nil {
 		t.Error("Powershell service returned an error but ReadPerformanceCounterWithHandler did not pass it up")
 	}
 
-	nul.Close()
+	// Returning unparseable data should return an error
+	svc.testType = 4
+	_, err = ReadPerformanceCounterWithHandler(svc, counterName, 0, 0)
+	if err == nil {
+		t.Error("Powershell service returning empty string did not yield an error")
+	}
 }
 
 // Lifted from exec_test.go

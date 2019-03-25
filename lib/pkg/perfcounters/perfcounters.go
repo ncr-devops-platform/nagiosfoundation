@@ -76,10 +76,15 @@ func ReadPerformanceCounterWithHandler(poshService powerShellService, counter st
 	}
 
 	trimmedStdout := strings.TrimSpace(stdout)
+
+	if trimmedStdout == "" {
+		return perfcounter, fmt.Errorf("No data returned for %s so this counter probably doesn't exist", counter)
+	}
+
 	avgValue, err := strconv.ParseFloat(trimmedStdout, 64)
 
 	if err != nil {
-		return perfcounter, err
+		return perfcounter, fmt.Errorf("Error processing for counter (%s): %s", counter, err)
 	}
 
 	perfcounter.Value = avgValue
