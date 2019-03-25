@@ -1,9 +1,7 @@
 package nagiosfoundation
 
 import (
-	"flag"
 	"fmt"
-	"os"
 	"os/user"
 )
 
@@ -142,46 +140,36 @@ func (ugc UserGroupCheck) CheckUserGroup() (string, int) {
 	return msg, retcode
 }
 
-// CheckUserGroupFlagsWithHandler checks for the existence of a user and
+// CheckUserGroupWithHandler checks for the existence of a user and
 // if it belongs to the named group on the host operating system.
-// It does this based on command line flags.
 //
-// The user and group are provided with
-// the command line flags, -user, and -group, respectively.
+// The user and group are provided with the user and group parameters.
 //
 // Returns - result message and return code.
-func CheckUserGroupFlagsWithHandler(userGroupHandler UserGroupService) (string, int) {
-	userPtr := flag.String("user", "", "user name")
-	groupPtr := flag.String("group", "", "group name")
-
-	flag.Parse()
-
+func CheckUserGroupWithHandler(user, group string, userGroupHandler UserGroupService) (string, int) {
 	var msg string
 	var retCode int
 
 	userGroupCheck := UserGroupCheck{
-		UserName:  *userPtr,
-		GroupName: *groupPtr,
+		UserName:  user,
+		GroupName: group,
 		Service:   userGroupHandler,
 	}
 
-	if *userPtr != "" && *groupPtr != "" {
+	if user != "" && group != "" {
 		msg, retCode = userGroupCheck.CheckUserGroup()
-	} else if *userPtr != "" {
+	} else if user != "" {
 		msg, retCode = userGroupCheck.CheckUser()
-	} else if *groupPtr != "" {
+	} else if group != "" {
 		msg, retCode = userGroupCheck.CheckGroup()
 	}
 
 	return msg, retCode
 }
 
-// CheckUserGroupFlagsWithExit executes the normal user/group
+// CheckUserGroup executes the normal user/group
 // checks in CheckUserGroupFlags() then prints the results
 // and exits.
-func CheckUserGroupFlagsWithExit() {
-	msg, retCode := CheckUserGroupFlagsWithHandler(new(UserGroupHandler))
-
-	fmt.Println(msg)
-	os.Exit(retCode)
+func CheckUserGroup(user, group string) (string, int) {
+	return CheckUserGroupWithHandler(user, group, new(UserGroupHandler))
 }
