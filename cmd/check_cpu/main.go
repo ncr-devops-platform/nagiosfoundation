@@ -1,10 +1,9 @@
 package main
 
 import (
-	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
+	"github.com/ncr-devops-platform/nagiosfoundation/cmd/check_cpu/cmd"
 )
 
 func main() {
-	nagiosfoundation.CheckExecutableVersion()
-	nagiosfoundation.CheckCPU()
+	cmd.Execute()
 }
