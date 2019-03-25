@@ -182,7 +182,7 @@ func checkProcessWithService(name string, checkType string, processService Proce
 		msg, retcode = checkRunning(pc, true)
 	default:
 		msg = fmt.Sprintf("Invalid check type: %s", checkType)
-		retcode = 3
+		retcode = 2
 	}
 
 	return msg, retcode
@@ -219,12 +219,6 @@ func checkProcessCmd(name string, checkType string, checkProcess func(string, st
 
 // CheckProcess finds a process by name to determine
 // if it is running or not running.
-func CheckProcess(name string, checkType string) {
-	msg, retcode := checkProcessCmd(name, checkType, checkProcessWithService, new(processHandler))
-
-	if retcode >= 0 {
-		fmt.Println(msg)
-	}
-
-	os.Exit(retcode)
+func CheckProcess(name string, checkType string) (string, int) {
+	return checkProcessCmd(name, checkType, checkProcessWithService, new(processHandler))
 }

@@ -22,7 +22,10 @@ The --name (-n) option is always required.
 ` + getHelpOsConstrained(),
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
-			nagiosfoundation.CheckProcess(name, checkType)
+			msg, retcode := nagiosfoundation.CheckProcess(name, checkType)
+
+			fmt.Println(msg)
+			os.Exit(retcode)
 		},
 	}
 
