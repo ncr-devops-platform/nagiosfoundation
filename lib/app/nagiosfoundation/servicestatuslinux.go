@@ -4,7 +4,6 @@ package nagiosfoundation
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 	"strings"
 )
@@ -41,8 +40,8 @@ func systemdServiceTest(serviceName string) (string, int) {
 			info = fmt.Sprintf("%s not in a running state", serviceName)
 			retcode = 2
 		} else {
-			info = fmt.Sprintf("failed to execute systemctl. %s Status unknown: %v", serviceName, err)
-			retcode = 3
+			info = fmt.Sprintf("Failed to execute systemctl. %s Status unknown: %v", serviceName, err)
+			retcode = 2
 		}
 	} else {
 		info = fmt.Sprintf("%s in a running state", serviceName)
@@ -59,11 +58,11 @@ func systemdServiceTest(serviceName string) (string, int) {
 		actualInfo = fmt.Sprintf(" (State: %s)", state)
 	}
 
-	msg := fmt.Sprintf("CheckService %s - %s%s", responseStateText, info, actualInfo)
+	msg := fmt.Sprintf("%s %s - %s%s", serviceCheckName, responseStateText, info, actualInfo)
 	return msg, retcode
 }
 
-func checkServiceOsConstrained(name string, state string, user string, manager string) {
+func checkServiceOsConstrained(name string, state string, user string, manager string) (string, int) {
 	var msg string
 	var retcode int
 
@@ -71,10 +70,9 @@ func checkServiceOsConstrained(name string, state string, user string, manager s
 	case "systemd":
 		msg, retcode = systemdServiceTest(name)
 	default:
-		msg = fmt.Sprintf("CheckServiceRunning CRITICAL - %s is not a valid service manager.", manager)
-		retcode = 3
+		msg = fmt.Sprintf("%s CRITICAL - %s is not a valid service manager.", serviceCheckName, manager)
+		retcode = 2
 	}
 
-	fmt.Println(msg)
-	os.Exit(retcode)
+	return msg, retcode
 }
