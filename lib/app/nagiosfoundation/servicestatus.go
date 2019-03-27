@@ -6,6 +6,10 @@ import (
 	"strings"
 )
 
+const serviceCheckName = "CheckService"
+
+type getServiceInfoFunc func(string) (string, string, string, error)
+
 type serviceInfo struct {
 	// The name of the service to process.
 	desiredName string
@@ -20,7 +24,7 @@ type serviceInfo struct {
 	actualState string
 	actualUser  string
 
-	getServiceInfo func(string) (string, string, string, error)
+	getServiceInfo getServiceInfoFunc
 }
 
 // Returns the actual name of the service resulting from the service query.
@@ -128,12 +132,12 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 			i.ActualName(), i.ActualState(), i.ActualUser())
 	}
 
-	msg := fmt.Sprintf("CheckService %s - %s%s", responseStateText, checkInfo, actualInfo)
+	msg := fmt.Sprintf("%s %s - %s%s", serviceCheckName, responseStateText, checkInfo, actualInfo)
 	return msg, retcode
 }
 
 // CheckService checks a service based on name, state,
 // user, and manager
-func CheckService(name, state, user, manager string) {
-	checkServiceOsConstrained(name, state, user, manager)
+func CheckService(name, state, user, manager string) (string, int) {
+	return checkServiceOsConstrained(name, state, user, manager)
 }

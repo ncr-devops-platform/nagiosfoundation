@@ -14,8 +14,5 @@ to see if it is running.
 }
 
 func addFlagsOsConstrained(cmd *cobra.Command) {
-	const managerFlag = "manager"
-
-	cmd.Flags().StringVarP(&manager, managerFlag, "m", "", "the name of local service manager. Allowed options are: systemd")
-	cmd.MarkFlagRequired(managerFlag)
+	cmd.Flags().StringVarP(&manager, serviceManagerFlag, "m", "systemd", "the name of local service manager. Allowed options are: systemd")
 }

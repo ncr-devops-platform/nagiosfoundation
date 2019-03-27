@@ -5,9 +5,10 @@ import (
 	"os"
 
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
-	nf "github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation/check_service"
 	"github.com/spf13/cobra"
 )
+
+const serviceManagerFlag = "manager"
 
 var state, user, manager string
 
@@ -23,7 +24,10 @@ given and the --name (-n) option is always required.` + getHelpOsConstrained(),
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
 
-			nf.CheckService(name, state, user, manager)
+			msg, retcode := nagiosfoundation.CheckService(name, state, user, manager)
+
+			fmt.Println(msg)
+			os.Exit(retcode)
 		},
 	}
 
