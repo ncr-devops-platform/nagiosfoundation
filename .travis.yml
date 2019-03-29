@@ -8,7 +8,10 @@ git:
   depth: 1
 
 install:
-  #- test ! -d /home/travis/gopath/src/github.com/ncr-devops-platform && mv /home/travis/gopath/src/github.com/* /home/travis/gopath/src/github.com/ncr-devops-platform
+  - |
+    if [ ! -d /home/travis/gopath/src/github.com/ncr-devops-platform ]; then
+      mv /home/travis/gopath/src/github.com/* /home/travis/gopath/src/github.com/ncr-devops-platform
+    fi
   - mv /home/travis/gopath/src/github.com/ncr-devops-platform/nagios-foundation /home/travis/gopath/src/github.com/ncr-devops-platform/nagiosfoundation
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
   - dep ensure -v
@@ -20,7 +23,7 @@ script:
 deploy:
   provider: releases
   api_key:
-    secure: BTtv1betWObLQiFJNKtIfaNtOSgkqqQvwYKwlGHRigRq7/+20F20xo/UKJJaMam7VmHM/+lHA+yYUDyX+YzUoURY5BxY+8QBs6FuqafoMZR5P2zsx2drFxumrqpFYrCpEQjSB+tCwyNQ+CdiuJBapRG/98ePco/VyIMgGNHa9swkxTvq0YFUheLIrBXvdeYWtew6p4FRQlcmUt9EtSOaKJ6x3mDhLa9MfLCo+0izE/dB0YrxJPCTIBQ0+eFvIU9Dw8mhCncwwfeRu6GPOeMVDA2htRwmlQt15V+a1oYlZfvp26Ga0jBljq0zAjMd/EEf9e4/Xk/Rdcl6BJ6863VVza44+8YeDNVanM4lKDrU9RTKVlVgk+r/BWKgH/EbWiTqDm7GE1hoZnfjp08TIQ0NAbLgIurOEPw6HICn4B5RpAuRtDKg+lvIi5aALgvZN2LSQ5h4vHITuebPGFtVRynd6iq2DkkwUYS/6PaGfBerMBJD/hH2ELiROcKh2p6Wyp6on8SIf+M+NouBnL9vJ6mr4Bw7ATz42H//3ITLdiC0uFY3iD0ObaGOVGX0P/j3AXK0bri8rnU8k5xT81awbX3/cjZK8hg++hRRKcWViQX7fXW8XxRtYvpnGGtMrZNITpR97aSL/qjPE2ERXqRkRPksJt8Qx7WwKzLBNYwdXZ7olrY=
+    secure: V31VHHJF+4yzDrsouJ65iEuaUJL6ZweYnb0sCDKUn3BEjot5otLzXmfOxSaDY1GsVvUxdjfQqBhdTGmXc9qxj6dCrc6wN3lnA/gD8cx+X7SX4r+lvh5xgFzjTwS9iEAj0DhIxBWZPApfcDzi4Ie8lslHwAQ0kaKACFacWZJC6dASbk9anE9z7f0pNi1Rvr7rtcemtW6mJmdA9oo8E01csn1YnfXhtKRLHXiJZgifhTrUowIOTK/qS+XwniWqwbo8ebX26cVcwOXRnuvB7ixdx6uF/JsGekPElLDiFwVYmz9Yv3QN/bfBY0Q/EAGbdnqTPCe6DOe6mxD3Ai3Drk8zxGjCa70jUPVXzQ6TyZ5Dkkul2unUnE3Ffb++SmQUArNO4ARgnl29AsVOmZiwPBEe43RhN37oVan1Ln9FWMmN8pURzlqW3knQAM8KJAhLredtK08se3EMtzrOVLwFZIrMGf9bUA5wDkEIZqsCzdXWbXfOqql7zL4MyFVpr/MZM+yatt0Xjc8WsoiOqEo7tf03bzubAJLLdesbC/q2APKjOK1L8S7ZXaGzEDbb34Yv07mXlz1AtPYWjrqZ5yrfRKJwcA1BSNdhi5ZRogXOtsMMz0hRii5O/6gNL3qhShMoL3ya4ZqZ+dtb0McLGNlqlgbtoCPlYVWc3uZeIdn/KeiEiwc=
   file_glob: true
   file: out/package/*
   skip_cleanup: true
