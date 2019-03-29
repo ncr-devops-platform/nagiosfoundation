@@ -18,6 +18,8 @@ install:
 
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic -v ./... && bash <(curl -s https://codecov.io/bash)
+  - make clean
+  - git checkout .
   - make package
 
 deploy:
