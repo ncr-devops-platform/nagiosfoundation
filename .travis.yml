@@ -15,11 +15,13 @@ install:
   - mv /home/travis/gopath/src/github.com/ncr-devops-platform/nagios-foundation /home/travis/gopath/src/github.com/ncr-devops-platform/nagiosfoundation
   - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
   - dep ensure -v
+  - git checkout .
+  - ./godelw version
+  - ./godelw project-version
 
 script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic -v ./... && bash <(curl -s https://codecov.io/bash)
   - make clean
-  - git checkout .
   - make package
 
 deploy:

@@ -5,7 +5,7 @@ products:
       build-args-script: |
         echo "-ldflags"
         echo -n "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdName=check_available_memory "
-        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$(./godelw project-version)"
+        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$VERSION"
       os-archs:
         - os: windows
           arch: amd64
@@ -28,7 +28,7 @@ products:
       build-args-script: |
         echo "-ldflags"
         echo -n "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdName=check_cpu "
-        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$(./godelw project-version)"
+        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$VERSION"
       os-archs:
         - os: windows
           arch: amd64
@@ -51,7 +51,7 @@ products:
       build-args-script: |
         echo "-ldflags"
         echo -n "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdName=check_performance_counter "
-        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$(./godelw project-version)"
+        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$VERSION"
       os-archs:
         - os: windows
           arch: amd64
@@ -70,7 +70,7 @@ products:
       build-args-script: |
         echo "-ldflags"
         echo -n "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdName=check_service "
-        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$(./godelw project-version)"
+        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$VERSION"
       os-archs:
         - os: windows
           arch: amd64
@@ -93,7 +93,7 @@ products:
       build-args-script: |
         echo "-ldflags"
         echo -n "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdName=check_user_group "
-        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$(./godelw project-version)"
+        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$VERSION"
       os-archs:
         - os: windows
           arch: amd64
@@ -116,7 +116,7 @@ products:
       build-args-script: |
         echo "-ldflags"
         echo -n "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdName=check_process "
-        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$(./godelw project-version)"
+        echo "-X github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation.cmdVersion=$VERSION"
       os-archs:
         - os: windows
           arch: amd64
