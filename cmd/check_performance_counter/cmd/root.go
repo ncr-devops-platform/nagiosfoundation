@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ncr-devops-platform/nagiosfoundation/cmd/initcmd"
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
 	"github.com/spf13/cobra"
 )
@@ -36,7 +37,7 @@ this check to emit an OK response when using these defaults.`,
 		},
 	}
 
-	nagiosfoundation.AddVersionCommand(rootCmd)
+	initcmd.AddVersionCommand(rootCmd)
 
 	const counterNameFlag = "counter_name"
 	rootCmd.Flags().StringVarP(&counterName, counterNameFlag, "n", "", "the name of the performance counter to check")

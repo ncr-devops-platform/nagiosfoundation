@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ncr-devops-platform/nagiosfoundation/cmd/initcmd"
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
 	"github.com/spf13/cobra"
 )
@@ -37,7 +38,7 @@ belongs to a group. At least one flag must be provided.
 		},
 	}
 
-	nagiosfoundation.AddVersionCommand(rootCmd)
+	initcmd.AddVersionCommand(rootCmd)
 
 	rootCmd.Flags().StringVarP(&user, "user", "u", "", "user name")
 	rootCmd.Flags().StringVarP(&group, "group", "g", "", "group name")
