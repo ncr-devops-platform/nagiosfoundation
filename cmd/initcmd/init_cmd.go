@@ -1,4 +1,4 @@
-package nagiosfoundation
+package initcmd
 
 import (
 	"flag"

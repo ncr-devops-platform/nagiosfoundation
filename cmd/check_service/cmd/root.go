@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ncr-devops-platform/nagiosfoundation/cmd/initcmd"
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
 	"github.com/spf13/cobra"
 )
@@ -31,7 +32,7 @@ given and the --name (-n) option is always required.` + getHelpOsConstrained(),
 		},
 	}
 
-	nagiosfoundation.AddVersionCommand(rootCmd)
+	initcmd.AddVersionCommand(rootCmd)
 
 	const nameFlag = "name"
 	rootCmd.Flags().StringVarP(&name, nameFlag, "n", "", "service name")

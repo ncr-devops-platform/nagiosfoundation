@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ncr-devops-platform/nagiosfoundation/cmd/initcmd"
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +30,7 @@ of these, an OK response is issued.`,
 		},
 	}
 
-	nagiosfoundation.AddVersionCommand(rootCmd)
+	initcmd.AddVersionCommand(rootCmd)
 
 	rootCmd.Flags().IntVarP(&warning, "warning", "w", 85, "the average cpu threshold to issue a warning alert")
 	rootCmd.Flags().IntVarP(&critical, "critical", "c", 95, "the average cpu threshold to issue a critical alert")
