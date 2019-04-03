@@ -1,37 +1,18 @@
 # Building nagiosfoundation
-In addition to __Go__ and __Make__, building requires a couple of utilities.
-* [__gödel__](https://github.com/palantir/godel) build tool
-* [__dep__](https://github.com/golang/dep) dependency management tool
+In addition to __Go__ and __Make__, building requires the [__gödel__](https://github.com/palantir/godel) build tool which will automatically install itself during the build..
 
-During the build gödel will automatically install itself at `$HOME/.godel` but dep must be installed beforehand using the [dep installation instructions](https://github.com/golang/dep#installation) or follow the steps below for Linux.
-
-### Create workspace
-```
-cd $GOPATH
-mkdir -p src/github.com/ncr-devops-platform/
-cd src/github.com/ncr-devops-platform/
-```
+The build also uses [Go Modules](https://blog.golang.org/using-go-modules) for which Go 1.11 and Go 1.12 include preliminary support. In Go 1.13 this will be default for all Go development.
 
 ### Clone project
+Clone the project somewhere outside of your [Go Workspace](https://golang.org/doc/code.html#Workspaces) (a requirement of Go Modules).
+
 ```
-git clone https://github.com/ncr-devops-platform/nagios-foundation.git nagiosfoundation
+git clone https://github.com/ncr-devops-platform/nagios-foundation.git
 ```
 
 ### Set project directory
 ```
-cd nagiosfoundation
-```
-
-### Install dep
-For Linux. Use the [dep installation instructions](https://github.com/golang/dep#installation) for other platforms.
-```
-mkdir $GOPATH/bin
-curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-```
-
-### Update dependencies
-```
-$GOPATH/bin/dep ensure -v
+cd nagios-foundation
 ```
 
 ### Build
@@ -40,10 +21,10 @@ make
 ```
 
 ### Artifacts
-The build artifacts can be found in `out/build`.
+The build artifacts can be found in `out/build` and full build assets are in `out/package`.
 
 ## Releases
-The `Makefile` uses [`ghr`](https://github.com/tcnksm/ghr) to create the GitHub Release and upload artifacts. This would normally be done by the project owner and requires a GitHub API token. Refer to the [ghr project](https://github.com/tcnksm/ghr) for more information and install `ghr` with
+Releases are normally performed through Travis CI by tagging a commit. As a secondary method, the `Makefile` can use [`ghr`](https://github.com/tcnksm/ghr) to create the GitHub Release and upload artifacts. This would normally be done by the project owner and requires a GitHub API token. Refer to the [ghr project](https://github.com/tcnksm/ghr) for more information and install `ghr` with
 ```
 go get -u github.com/tcnksm/ghr
 ```
@@ -54,6 +35,12 @@ make release
 
 ## Individual Commands
 When developing it may be desirable to build a single command rather than the entire project. There are a few ways of doing this. Choose the one appropriate for you.
+
+### Go Module Configuration
+Because this project uses Go Modules for dependencies, before performing individual builds execute the following to trigger proper functionality if this project was placed in a Go Workspace, or run it anyway if you're not sure what this means.
+```
+export GO111MODULE=1
+```
 
 ### Gödel
 The `Makefile` uses Gödel for building so this method is much like the `Makefile` method.
