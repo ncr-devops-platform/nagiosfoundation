@@ -23,6 +23,7 @@ script:
   - go test -race -coverprofile=coverage.txt -covermode=atomic -v ./... && bash <(curl -s https://codecov.io/bash)
   - make clean
   - make package
+  - scripts/validate-version.sh
 
 deploy:
   provider: releases
