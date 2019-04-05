@@ -20,6 +20,18 @@ Use this collection of applications as [Sensu Go Checks](https://docs.sensu.io/s
 ```
 $ cat << EOF | sensuctl create
 {
+  "type": "Asset",
+  "api_version": "core/v2",
+  "metadata": {
+    "name": "nagiosfoundation-0.1.0",
+    "namespace": "default"
+  },
+  "spec": {
+    "url": "https://github.com/ncr-devops-platform/nagios-foundation/releases/download/0.1.0/nagiosfoundation-linux-amd64-0.1.0.tgz",
+    "sha512": "5cf2c7e7ec6a003da0c7a509efec64b75a952467bfe3494800ce9dd6f44a773c2a413968bffe3362287820e7c637a1aca8c3b743b0e8d29675fcb8e87db8a2cc"
+  }
+}
+{
   "type": "CheckConfig",
   "api_version": "core/v2",
   "metadata": {
@@ -30,6 +42,9 @@ $ cat << EOF | sensuctl create
     "command": "check_process --name signage_app",
     "interval": 60,
     "publish": true,
+    "runtime_assets": [
+      "nagiosfoundation-0.1.0"
+    ],
     "subscriptions": [
       "signage"
     ]
