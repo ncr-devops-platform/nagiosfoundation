@@ -3,7 +3,7 @@ The performance counter check is Windows only. It retreives a Windows Performanc
 
 The defaults for this check have the `--critical` and `--warning` values set to `0`, and the counter value retrieved is compared to be lesser than those values. Generally a counter value will be `> 0`, causing this check to generally emit an `OK` response when using these defaults.
 
-* `--counter_name (-c)`: The Performance Counter to fetch. No default and therefore it must specified.
+* `--counter_name (-n)`: The Performance Counter to fetch. No default and therefore it must specified.
 * `--greater_than (-g)`: If set, the Performance Counter value is compared to be greater than the `--critical` and `--warning (-w)` values. The default value of `false` causes the comparison to be less than the `--critical` and `--warning` values. Do not specify a flag argument when using.
 * `--critical (-c)`: The value the performance counter is compared with to determine a `CRITICAL` response. The default is `0`.
 * `--warning (-w)`: The value the performance counter is compared with to determine a `WARNING` response. The default is `0`.
