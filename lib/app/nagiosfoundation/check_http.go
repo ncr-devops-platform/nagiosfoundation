@@ -35,6 +35,10 @@ func CheckHTTP(url string, redirect bool, timeout int) (string, int) {
 		retCode = 1
 		responseStateText = "WARNING"
 		responseCode = strconv.Itoa(status)
+	case status == -1:
+		retCode = 2
+		responseStateText = "UNKNOWN ERROR"
+		responseCode = strconv.Itoa(status)
 	default:
 		retCode = 0
 		responseStateText = "OK"
@@ -51,12 +55,12 @@ func statusCode(url string, timeout int) (int, error) {
 
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return 0, err
+		return -1, err
 	}
 
 	response, err := http.DefaultTransport.RoundTrip(request)
 	if err != nil {
-		return 0, err
+		return -1, err
 	}
 
 	return response.StatusCode, nil
