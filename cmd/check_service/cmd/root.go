@@ -10,8 +10,10 @@ import (
 )
 
 const serviceManagerFlag = "manager"
+const currentStateWantedFlag = "current_state"
 
 var state, user, manager string
+var currentStateWanted bool
 
 // Execute runs the root command
 func Execute() {
@@ -25,7 +27,7 @@ given and the --name (-n) option is always required.` + getHelpOsConstrained(),
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
 
-			msg, retcode := nagiosfoundation.CheckService(name, state, user, manager)
+			msg, retcode := nagiosfoundation.CheckService(name, state, user, currentStateWanted, manager)
 
 			fmt.Println(msg)
 			os.Exit(retcode)
