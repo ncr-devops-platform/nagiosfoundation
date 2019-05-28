@@ -5,10 +5,10 @@ The process check attempts to find a process by name specified with the `--name 
 
 ## Process Running
 ```
-process_check --name bash --type running
+check_process --name bash --type running
 ```
 
 ## Process Not Running
 ```
-process_check --name invalidname --type notrunning
+check_process --name invalidname --type notrunning
 ```
