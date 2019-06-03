@@ -15,12 +15,7 @@ func CheckHTTP(url string, redirect bool, timeout int) (string, int) {
 	var responseStateText string
 	var responseCode string
 
-	status, err := statusCode(url, timeout)
-	if err != nil {
-		retCode = 2
-		responseStateText = "CRITICAL"
-		responseCode = "UNHANDLED ERROR"
-	}
+	status, _ := statusCode(url, timeout)
 
 	switch {
 	case status >= 400:
