@@ -3,13 +3,43 @@ The service check is used to perform various checks against a service on an oper
 
 Linux supports different Service Managers (`systemd`, `init`, etc). Currently `systemd` is the only supported Service Manager and is the default.
 
-## Service Installed and Running Check
-Checking that a named service is installed and running is the only check supported by both Linux and Windows.
+## Common Checks
+Both Linux and Windows support checking that a named service is running and output of the current state in a nagios format.
 
 ### Linux
-This check only verifies the service is running. Note that `--name (-n)` is required and the `--manager` defaults to `systemd`.
+This check supports
+* Verify a service is running
+* Return the state of the service as a nagios formatted result
+
+The functionality depends on the command line flags used and can be easily inferred based on the flags present.
+* `--name (-n)` : The service name. Required.
+* `--current-state (-c)` : Output the service state in nagios output
+
+### Service Running
+To verify a service is running, use the `--name (-n)` option. Note that `--name (-n)` is required and the `--manager` defaults to `systemd`.
 ```
 check_service --name sshd
+```
+
+### Return the State of a Service
+Use the `--current_state (-c)` along with the `--name (-n)` option to return the state of a service. Linux supports two states:
+* 0 - Not running
+* 1 - Running
+
+Some examples are
+
+**Service Running**
+
+```
+$ check_service --name sshd --current_state
+CheckService OK - sshd in a running state | service_state=1 service_name=sshd
+```
+
+**Service Not Running**
+
+```
+$ check_service --name sshd --current_state
+CheckService CRITICAL - sshd not in a running state (State: inactive) | service_state=0 service_name=sshd
 ```
 
 ### Windows
@@ -24,11 +54,13 @@ The Windows version of this check supports several additional features.
 * A service exists and is in a specified state.
 * A service exists and is started by a specified user.
 * A service exists, is in a specified state, and is started by a specified user.
+* Returning the state of a service as a nagios formatted result
 
 The functionality depends on the command line flags used and can be easily inferred based on the flags present.
 * `--name (-n)` : The service name. Required.
 * `--state (-s)` : Validate the service is in the named state
 * `--user (-u)` : Validate the service is started by the named user.
+* `--current-state (-c)` : Output the Windows service state in nagios output
 * `--manager (-m)` : Specify a service manager. `wmi` and `svcmgr` are supported. The default is `wmi`.
 
 ## Windows Service Manager
@@ -54,3 +86,27 @@ check_service.exe --name audiosrv --user "NT AUTHORITY\LocalService"
 ```
 check_service.exe --name audiosrv --state running --user "NT AUTHORITY\LocalService"
 ```
+
+### Return the State of a Service
+```
+./check_service.exe --name audiosrv --current_state
+CheckService OK - audiosrv is in a Running state | service_state=0 service_name=audiosrv
+```
+
+### Return the State of Non-existing Service
+```
+./check_service.exe --name fakeservice --current_state
+CheckService OK - fakeservice does not exist | service_state=255 service_name=fakeservice
+```
+
+## Service State Numbers
+The state numbers returned using the `--current_state (-c)` option are:
+* 0 - Running
+* 1 - Paused
+* 2 - Start Pending
+* 3 - Pause Pending
+* 4 - Continue Pending
+* 5 - Stop pending
+* 6 - Stopped
+* 7 - Unknown
+* 255 - No such service

@@ -14,5 +14,6 @@ to see if it is running.
 }
 
 func addFlagsOsConstrained(cmd *cobra.Command) {
+	cmd.Flags().BoolVarP(&currentStateWanted, currentStateWantedFlag, "c", false, "output the service state in nagios output")
 	cmd.Flags().StringVarP(&manager, serviceManagerFlag, "m", "systemd", "the name of local service manager. Allowed options are: systemd")
 }
