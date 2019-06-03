@@ -12,12 +12,13 @@ func TestActualIs(t *testing.T) {
 	var badUser = "badUser"
 
 	var matchName = "GOODNAME"
-	var matchState = "GOODSTATE"
+	var matchStateText = "GOODSTATE"
+	var matchStateNbr = 0
 	var matchUser = "GOODUSER"
 
 	si := serviceInfo{
-		getServiceInfo: func(n string) (string, string, string, error) {
-			return goodName, goodUser, goodState, nil
+		getServiceInfo: func(n string) (string, string, string, int, error) {
+			return goodName, goodUser, goodState, 0, nil
 		},
 	}
 
@@ -34,7 +35,7 @@ func TestActualIs(t *testing.T) {
 		t.Errorf("ActualName (%s) does not match desiredName (%s)", actualResult, goodName)
 	}
 
-	actualResult = si.ActualState()
+	actualResult = si.ActualStateText()
 	if actualResult != goodState {
 		t.Errorf("ActualState (%s) does not match desiredState (%s)", actualResult, goodState)
 	}
@@ -55,9 +56,18 @@ func TestActualIs(t *testing.T) {
 		t.Errorf("IsName(%s) does not match actualName (%s)", matchName, si.ActualName())
 	}
 
-	isResult = si.IsState(matchState)
+	isResult = si.IsState(matchStateText)
 	if !isResult {
-		t.Errorf("IsState(%s) does not match actualState (%s)", matchState, si.ActualState())
+		t.Errorf("IsState(%s) does not match actualState (%s)", matchStateText, si.ActualStateText())
+	}
+
+	if si.ActualStateNbr() != matchStateNbr {
+		isResult = false
+	} else {
+		isResult = true
+	}
+	if !isResult {
+		t.Errorf("IsState(%d) does not match actualState (%d)", matchStateNbr, si.ActualStateNbr())
 	}
 
 	isResult = si.IsUser(matchUser)
@@ -136,6 +146,18 @@ func TestActualIs(t *testing.T) {
 	msg, retcode = si.ProcessInfo()
 	if retcode != 0 {
 		t.Errorf("ProcessInfo() failed returning service info only retcode %d, msg %s", retcode, msg)
+	}
+
+	si.currentStateWanted = true
+	msg, retcode = si.ProcessInfo()
+	if retcode != 0 {
+		t.Errorf("ProcessInfo() failed when fetching current state")
+	}
+
+	si.desiredName = badName
+	msg, retcode = si.ProcessInfo()
+	if retcode != 0 {
+		t.Errorf("ProcessInfo() failed when fetching current state for unknown service")
 	}
 
 	si.getServiceInfo = nil

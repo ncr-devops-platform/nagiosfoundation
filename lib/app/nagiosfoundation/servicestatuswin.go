@@ -13,7 +13,32 @@ import (
 	"github.com/StackExchange/wmi"
 )
 
-func getInfoWmi(name string) (string, string, string, error) {
+func getStateNbrFromText(state string) int {
+	var nbrState int
+
+	switch state {
+	case "Stopped":
+		nbrState = 6
+	case "Start Pending":
+		nbrState = 2
+	case "Stop Pending":
+		nbrState = 5
+	case "Running":
+		nbrState = 0
+	case "Continue Pending":
+		nbrState = 4
+	case "Pause Pending":
+		nbrState = 3
+	case "Paused":
+		nbrState = 1
+	default:
+		nbrState = 7
+	}
+
+	return nbrState
+}
+
+func getInfoWmi(name string) (string, string, string, int, error) {
 	type win32_Service struct {
 		Name      string
 		State     string
@@ -23,7 +48,8 @@ func getInfoWmi(name string) (string, string, string, error) {
 	var dst []win32_Service
 	var actualName string
 	var actualUser string
-	var actualState string
+	var actualStateText string
+	var actualStateNbr int
 
 	w := fmt.Sprintf("where name = '%v'", name)
 
@@ -34,10 +60,11 @@ func getInfoWmi(name string) (string, string, string, error) {
 	if err == nil && len(dst) >= 1 {
 		actualName = dst[0].Name
 		actualUser = dst[0].StartName
-		actualState = dst[0].State
+		actualStateText = dst[0].State
+		actualStateNbr = getStateNbrFromText(actualStateText)
 	}
 
-	return actualName, actualUser, actualState, err
+	return actualName, actualUser, actualStateText, actualStateNbr, err
 }
 
 func getStateText(state svc.State) string {
@@ -65,10 +92,36 @@ func getStateText(state svc.State) string {
 	return txtState
 }
 
-func getInfoSvcMgr(name string) (string, string, string, error) {
+func getStateNbr(state svc.State) int {
+	var nbrState int
+
+	switch state {
+	case windows.SERVICE_STOPPED:
+		nbrState = 6
+	case windows.SERVICE_START_PENDING:
+		nbrState = 2
+	case windows.SERVICE_STOP_PENDING:
+		nbrState = 5
+	case windows.SERVICE_RUNNING:
+		nbrState = 0
+	case windows.SERVICE_CONTINUE_PENDING:
+		nbrState = 4
+	case windows.SERVICE_PAUSE_PENDING:
+		nbrState = 3
+	case windows.SERVICE_PAUSED:
+		nbrState = 1
+	default:
+		nbrState = 7
+	}
+
+	return nbrState
+}
+
+func getInfoSvcMgr(name string) (string, string, string, int, error) {
 	var serviceName string
 	var serviceStartName string
-	var serviceState string
+	var serviceStateText string
+	var serviceStateNbr int
 
 	mgrPtr, err := mgr.Connect()
 	if err != nil {
@@ -104,17 +157,18 @@ func getInfoSvcMgr(name string) (string, string, string, error) {
 			status, err = service.Query()
 
 			if err == nil {
-				serviceState = getStateText(status.State)
+				serviceStateText = getStateText(status.State)
+				serviceStateNbr = getStateNbr(status.State)
 			} else {
 				err = errors.New("Query service failed: " + err.Error())
 			}
 		}
 	}
 
-	return serviceName, serviceStartName, serviceState, err
+	return serviceName, serviceStartName, serviceStateText, serviceStateNbr, err
 }
 
-func checkServiceOsConstrained(name string, state string, user string, manager string) (string, int) {
+func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, manager string) (string, int) {
 	managers := make(map[string]getServiceInfoFunc)
 	managers["wmi"] = getInfoWmi
 	managers["svcmgr"] = getInfoSvcMgr
@@ -139,10 +193,11 @@ func checkServiceOsConstrained(name string, state string, user string, manager s
 		retcode = 2
 	} else {
 		i := serviceInfo{
-			desiredName:    name,
-			desiredState:   state,
-			desiredUser:    user,
-			getServiceInfo: managers[manager],
+			desiredName:        name,
+			desiredState:       state,
+			desiredUser:        user,
+			currentStateWanted: currentStateWanted,
+			getServiceInfo:     managers[manager],
 		}
 
 		err := i.GetInfo()
