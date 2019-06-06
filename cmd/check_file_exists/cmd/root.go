@@ -5,12 +5,12 @@ import (
 	"os"
 
 	"github.com/ncr-devops-platform/nagiosfoundation/cmd/initcmd"
-	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
 	"github.com/spf13/cobra"
 )
 
 // Execute runs the root command
-func Execute() {
+func Execute(apiCheckFileExists func(string, bool) (string, int)) int {
+	var exitCode int
 	var pattern string
 	var negate bool
 
@@ -19,20 +19,22 @@ func Execute() {
 		Short: "Check for the existence of one or more files matching specific filepath or globbing patterns.",
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
-			msg, retval := nagiosfoundation.CheckFileExists(pattern, negate)
+			msg, retval := apiCheckFileExists(pattern, negate)
 
 			fmt.Println(msg)
-			os.Exit(retval)
+			exitCode = retval
 		},
 	}
 
 	initcmd.AddVersionCommand(rootCmd)
 
 	rootCmd.Flags().StringVarP(&pattern, "pattern", "p", "", "Filepath or globbing pattern to check for one or more existing files")
-	rootCmd.Flags().BoolVarP(&negate, "negate", "n", false, "If set, asserts filepath or globbing pattern should not match any existing file")
+	rootCmd.Flags().BoolVarP(&negate, "negate", "n", false, "Asserts filepath or globbing pattern should NOT match any existing file")
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Fprintln(os.Stdout, err)
+		exitCode = 1
 	}
+
+	return exitCode
 }
