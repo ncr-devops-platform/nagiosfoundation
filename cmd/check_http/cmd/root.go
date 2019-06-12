@@ -5,12 +5,12 @@ import (
 	"os"
 
 	"github.com/ncr-devops-platform/nagiosfoundation/cmd/initcmd"
-	"github.com/ncr-devops-platform/nagiosfoundation/lib/app/nagiosfoundation"
 	"github.com/spf13/cobra"
 )
 
 // Execute runs the root command
-func Execute() {
+func Execute(apiCheckHTTP func(string, bool, int) (string, int)) int {
+	var exitCode int
 	var url string
 	var redirect bool
 	var timeout int
@@ -21,10 +21,10 @@ func Execute() {
 		Long:  `Perform an HTTP get request and assert whether it is OK, warning or critical.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
-			msg, retval := nagiosfoundation.CheckHTTP(url, redirect, timeout)
+			msg, retval := apiCheckHTTP(url, redirect, timeout)
 
 			fmt.Println(msg)
-			os.Exit(retval)
+			exitCode = retval
 		},
 	}
 
@@ -35,7 +35,9 @@ func Execute() {
 	rootCmd.Flags().IntVarP(&timeout, "timeout", "t", 15, "timeout in seconds")
 
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Fprintln(os.Stdout, err)
+		exitCode = 1
 	}
+
+	return exitCode
 }
