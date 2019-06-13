@@ -2,20 +2,30 @@ package nagiosfoundation
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/thedevsaddam/gojsonq"
 )
 
 // CheckHTTP attempts an HTTP request against the provided url, reporting the HTTP response code and overall request state.
-func CheckHTTP(url string, redirect bool, timeout int) (string, int) {
-
+func CheckHTTP(url string, redirect bool, timeout int, format string, path string, expectedValue string) (string, int) {
+	var accept string
 	var msg string
 	var retCode int
 	var responseStateText string
 	var responseCode string
 
-	status, _ := statusCode(url, timeout)
+	switch {
+	case format == "json":
+		accept = "application/json"
+	default:
+		accept = ""
+	}
+
+	status, body, _ := statusCode(url, timeout, accept)
 
 	switch {
 	case status >= 400:
@@ -40,23 +50,48 @@ func CheckHTTP(url string, redirect bool, timeout int) (string, int) {
 		responseCode = strconv.Itoa(status)
 	}
 
-	msg = fmt.Sprintf("CheckHttp %s - Url %s responded with %s", responseStateText, url, responseCode)
+	var checkMsg = ""
+	if retCode == 0 &&
+		len(expectedValue) > 0 &&
+		len(format) > 0 &&
+		len(path) > 0 {
+
+		switch {
+		case format == "json":
+			queryValue := fmt.Sprintf("%v", gojsonq.New().JSONString(body).Find(path))
+			if queryValue == expectedValue {
+				checkMsg = fmt.Sprintf(". The value found at %s has expected value %s", path, expectedValue)
+			} else {
+				retCode = 2
+				responseStateText = "CRITICAL"
+				checkMsg = fmt.Sprintf(". The value found at %s has unexpected value %s", path, queryValue)
+			}
+		}
+	}
+
+	msg = fmt.Sprintf("CheckHttp %s - Url %s responded with %s%s", responseStateText, url, responseCode, checkMsg)
+	strconv.Itoa(status)
 
 	return msg, retCode
 }
 
-func statusCode(url string, timeout int) (int, error) {
+func statusCode(url string, timeout int, accept string) (int, string, error) {
 	http.DefaultClient.Timeout = time.Duration(timeout) * time.Second
 
 	request, err := http.NewRequest("GET", url, nil)
+	request.Header.Set("accept", accept)
 	if err != nil {
-		return -1, err
+		return 0, "", err
 	}
 
 	response, err := http.DefaultTransport.RoundTrip(request)
 	if err != nil {
-		return -1, err
+		return -1, "", err
 	}
 
-	return response.StatusCode, nil
+	body, readErr := ioutil.ReadAll(response.Body)
+	if readErr != nil {
+		return -1, "", readErr
+	}
+	return response.StatusCode, string(body), nil
 }

@@ -48,3 +48,7 @@
 [[constraint]]
   name = "github.com/pbnjay/memory"
   revision = "974d429e7ae40c89e7dcd41cfcc22a0bfbe42510"
+
+[[constraint]]
+  name = "github.com/thedevsaddam/gojsonq"
+  version = "2.2.2"
