@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 
@@ -76,6 +77,9 @@ func CheckHTTP(url string, redirect bool, timeout int, format string, path strin
 }
 
 func statusCode(url string, timeout int, accept string) (int, string, error) {
+	if !isURL(url) {
+		return -1, "", fmt.Errorf("%s is not a valid url", url)
+	}
 	http.DefaultClient.Timeout = time.Duration(timeout) * time.Second
 
 	request, err := http.NewRequest("GET", url, nil)
@@ -94,4 +98,9 @@ func statusCode(url string, timeout int, accept string) (int, string, error) {
 		return -1, "", readErr
 	}
 	return response.StatusCode, string(body), nil
+}
+
+func isURL(str string) bool {
+	u, err := url.Parse(str)
+	return err == nil && u.Scheme != "" && u.Host != ""
 }
