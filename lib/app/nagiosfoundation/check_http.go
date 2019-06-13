@@ -80,13 +80,15 @@ func statusCode(url string, timeout int, accept string) (int, string, error) {
 	if !isURL(url) {
 		return -1, "", fmt.Errorf("%s is not a valid url", url)
 	}
+
 	http.DefaultClient.Timeout = time.Duration(timeout) * time.Second
 
 	request, err := http.NewRequest("GET", url, nil)
-	request.Header.Set("accept", accept)
 	if err != nil {
 		return 0, "", err
 	}
+
+	request.Header.Set("accept", accept)
 
 	response, err := http.DefaultTransport.RoundTrip(request)
 	if err != nil {
