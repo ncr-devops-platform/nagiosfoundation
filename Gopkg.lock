@@ -51,6 +51,14 @@
   version = "v1.0.3"
 
 [[projects]]
+  digest = "1:48702a7b31ffeb1ccce5db38ba75998906a74479ec0c7f50546a58105ba44972"
+  name = "github.com/thedevsaddam/gojsonq"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "69113724147bdb0973fc7b64d71de08e6cd476cb"
+  version = "v2.2.2"
+
+[[projects]]
   digest = "1:b6e1a0c7832fdadb7f395c33657a39c47abb9103dd3741bd7a5048d72d9419d0"
   name = "golang.org/x/sys"
   packages = [
@@ -68,6 +76,7 @@
     "github.com/StackExchange/wmi",
     "github.com/pbnjay/memory",
     "github.com/spf13/cobra",
+    "github.com/thedevsaddam/gojsonq",
     "golang.org/x/sys/windows",
     "golang.org/x/sys/windows/svc",
     "golang.org/x/sys/windows/svc/mgr",

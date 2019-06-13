@@ -14,10 +14,12 @@ func TestCheckHTTP(t *testing.T) {
 		w.WriteHeader(httpStatus)
 	}))
 	defer httpServer.Close()
-
+	var format = ""
+	var path = ""
+	var expectedValue = ""
 	// Code 200
 	httpStatus = http.StatusOK
-	msg, code := CheckHTTP(httpServer.URL, false, 1)
+	msg, code := CheckHTTP(httpServer.URL, false, 1, format, path, expectedValue)
 	fmt.Println(msg)
 	fmt.Println(code)
 	if code != 0 {
@@ -26,7 +28,7 @@ func TestCheckHTTP(t *testing.T) {
 
 	// Code 400
 	httpStatus = http.StatusBadRequest
-	msg, code = CheckHTTP(httpServer.URL, false, 1)
+	msg, code = CheckHTTP(httpServer.URL, false, 1, format, path, expectedValue)
 	fmt.Println(msg)
 	fmt.Println(code)
 	if code != 2 {
@@ -35,7 +37,7 @@ func TestCheckHTTP(t *testing.T) {
 
 	// Code 300
 	httpStatus = http.StatusMultipleChoices
-	msg, code = CheckHTTP(httpServer.URL, false, 1)
+	msg, code = CheckHTTP(httpServer.URL, false, 1, format, path, expectedValue)
 	fmt.Println(msg)
 	fmt.Println(code)
 	if code != 1 {
@@ -44,7 +46,7 @@ func TestCheckHTTP(t *testing.T) {
 
 	// Code 300 with redirect on
 	httpStatus = http.StatusMultipleChoices
-	msg, code = CheckHTTP(httpServer.URL, true, 1)
+	msg, code = CheckHTTP(httpServer.URL, true, 1, format, path, expectedValue)
 	fmt.Println(msg)
 	fmt.Println(code)
 
@@ -53,7 +55,7 @@ func TestCheckHTTP(t *testing.T) {
 
 	// No server for connection
 	httpStatus = http.StatusOK
-	msg, code = CheckHTTP(httpServer.URL, false, 1)
+	msg, code = CheckHTTP(httpServer.URL, false, 1, format, path, expectedValue)
 	fmt.Println(msg)
 	fmt.Println(code)
 	if code != 2 {
@@ -62,7 +64,7 @@ func TestCheckHTTP(t *testing.T) {
 
 	// Invalid URL
 	httpStatus = http.StatusOK
-	msg, code = CheckHTTP("invalid%url", false, 1)
+	msg, code = CheckHTTP("invalid%url", false, 1, format, path, expectedValue)
 	fmt.Println(msg)
 	fmt.Println(code)
 	if code != 2 {
