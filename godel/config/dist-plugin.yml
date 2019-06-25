@@ -1,7 +1,7 @@
 products:
-  check_available_memory:
+  check_memory:
     build:
-      main-pkg: 'cmd/check_available_memory'
+      main-pkg: 'cmd/check_memory'
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
