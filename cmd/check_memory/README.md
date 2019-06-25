@@ -9,5 +9,5 @@ The memory check (`check_memory`) checks the available memory as reported by the
 ## Examples
 Issue a warning if memory usage is over 50% and critical if usage is over the default of 95%.
 ```
-check_memory -warning 50
+check_memory --warning 50
 ```
