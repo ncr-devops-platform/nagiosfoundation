@@ -87,21 +87,23 @@ func (i *serviceInfo) GetInfo() error {
 // Process the desired service info against the actual service info and return
 // check text and a return code.
 func (i *serviceInfo) ProcessInfo() (string, int) {
-	var checkInfo string
-	var retcode int
+	var (
+		checkInfo, nagiosInfo string
+		retcode               int
+	)
 
 	if !i.IsName(i.desiredName) {
 		if i.currentStateWanted == true {
-			checkInfo = fmt.Sprintf("%s does not exist | service_state=255 service_name=%s",
-				i.desiredName, i.desiredName)
+			checkInfo = fmt.Sprintf("%s does not exist", i.desiredName)
+			nagiosInfo = fmt.Sprintf("service_state=255 service_name=%s", i.desiredName)
 			retcode = 0
 		} else {
 			checkInfo = fmt.Sprintf("%s does not exist", i.desiredName)
 			retcode = 2
 		}
 	} else if i.currentStateWanted == true {
-		checkInfo = fmt.Sprintf("%s is in a %s state | service_state=%d service_name=%s",
-			i.desiredName, i.ActualStateText(), i.ActualStateNbr(), i.desiredName)
+		checkInfo = fmt.Sprintf("%s is in a %s state", i.desiredName, i.ActualStateText())
+		nagiosInfo = fmt.Sprintf("service_state=%d service_name=%s", i.ActualStateNbr(), i.desiredName)
 		retcode = 0
 	} else if i.desiredState != "" && i.desiredUser != "" {
 		if i.IsState(i.desiredState) && i.IsUser(i.desiredUser) {
@@ -139,19 +141,19 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 		retcode = 0
 	}
 
-	var responseStateText string
-	var actualInfo string
+	var responseStateText, actualInfo string
 
 	if retcode == 0 {
-		responseStateText = "OK"
+		responseStateText = statusTextOK
 		actualInfo = ""
 	} else {
-		responseStateText = "CRITICAL"
+		responseStateText = statusTextCritical
 		actualInfo = fmt.Sprintf(" (Name: %s, State: %s, User: %s)",
 			i.ActualName(), i.ActualStateText(), i.ActualUser())
 	}
 
-	msg := fmt.Sprintf("%s %s - %s%s", serviceCheckName, responseStateText, checkInfo, actualInfo)
+	msg, _ := resultMessage(serviceCheckName, responseStateText, checkInfo+actualInfo, nagiosInfo)
+
 	return msg, retcode
 }
 

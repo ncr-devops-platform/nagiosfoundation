@@ -5,6 +5,12 @@ import (
 	"os/user"
 )
 
+const (
+	checkUserName      = "CheckUser"
+	checkGroupName     = "CheckGroup"
+	checkUserGroupName = "CheckUserGroup"
+)
+
 // UserGroupService is an interface that allows for overriding
 // methods for looking up a user, a group, finding the ID for
 // a group name, and fetching a list of groups to which a user
@@ -67,19 +73,22 @@ type UserGroupCheck struct {
 // the user does not exist.
 func (ugc UserGroupCheck) CheckUser() (string, int) {
 	var retCode int
-	var formatString string
+	var formatString, status string
 
 	_, err := ugc.Service.Lookup(ugc.UserName)
 
 	if err == nil {
-		formatString = "%s OK - User %s exists"
+		formatString = "User %s exists"
+		status = statusTextOK
 		retCode = 0
 	} else {
-		formatString = "%s CRITICAL - User %s does not exist"
+		formatString = "User %s does not exist"
+		status = statusTextCritical
 		retCode = 3
 	}
 
-	return fmt.Sprintf(formatString, "CheckUser", ugc.UserName), retCode
+	msg, _ := resultMessage(checkUserName, status, fmt.Sprintf(formatString, ugc.UserName))
+	return msg, retCode
 }
 
 // CheckGroup checks for the existence of a group on the host
@@ -90,19 +99,22 @@ func (ugc UserGroupCheck) CheckUser() (string, int) {
 // the group does not exist.
 func (ugc UserGroupCheck) CheckGroup() (string, int) {
 	var retCode int
-	var formatString string
+	var formatString, status string
 
 	_, err := ugc.Service.LookupGroup(ugc.GroupName)
 
 	if err == nil {
-		formatString = "%s OK - Group %s exists"
+		formatString = "Group %s exists"
+		status = statusTextOK
 		retCode = 0
 	} else {
-		formatString = "%s CRITICAL - Group %s does not exist"
+		formatString = "Group %s does not exist"
+		status = statusTextCritical
 		retCode = 3
 	}
 
-	return fmt.Sprintf(formatString, "CheckGroup", ugc.GroupName), retCode
+	msg, _ := resultMessage(checkGroupName, status, fmt.Sprintf(formatString, ugc.GroupName))
+	return msg, retCode
 }
 
 // CheckUserGroup checks for the existence of a user and if it
@@ -112,31 +124,36 @@ func (ugc UserGroupCheck) CheckGroup() (string, int) {
 // with the return code. 0 indicates the user exists and is in
 // the group, 3 indicates otherwise.
 func (ugc UserGroupCheck) CheckUserGroup() (string, int) {
-	var msg string
+	var msg, status string
 	retcode := 3
 
 	userInfo, err := ugc.Service.Lookup(ugc.UserName)
 	if err != nil {
-		msg = fmt.Sprintf("CheckUserGroup CRITICAL - User %s does not exist", ugc.UserName)
+		msg = fmt.Sprintf("User %s does not exist", ugc.UserName)
+		status = statusTextCritical
 	} else {
 		groupIds, err := ugc.Service.GroupIds(userInfo)
 		if err != nil {
-			msg = fmt.Sprintf("CheckUserGroup CRITICAL - Could not get Group IDs for user %s", ugc.UserName)
+			msg = fmt.Sprintf("Could not get Group IDs for user %s", ugc.UserName)
+			status = statusTextCritical
 		} else {
-			msg = fmt.Sprintf("CheckUserGroup CRITICAL - User %s exists but is not in Group %s",
+			msg = fmt.Sprintf("User %s exists but is not in Group %s",
 				ugc.UserName, ugc.GroupName)
+			status = statusTextCritical
 
 			for i := range groupIds {
 				groupInfo, _ := ugc.Service.LookupGroupID(groupIds[i])
 				if groupInfo.Name == ugc.GroupName {
-					msg = fmt.Sprintf("CheckUserGroup OK - User %s exists and is in Group %s",
+					msg = fmt.Sprintf("User %s exists and is in Group %s",
 						ugc.UserName, ugc.GroupName)
+					status = statusTextOK
 					retcode = 0
 				}
 			}
 		}
 	}
 
+	msg, _ = resultMessage(checkUserGroupName, status, msg)
 	return msg, retcode
 }
 

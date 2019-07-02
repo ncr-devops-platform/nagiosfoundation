@@ -8,10 +8,6 @@ import (
 
 // CheckFileExists tests the assertion that one or more files matching specified pattern should or should not exist.
 func CheckFileExists(pattern string, negate bool) (string, int) {
-	const ok = "OK"
-	const critical = "CRITICAL"
-	const unknown = "UNKNOWN"
-
 	var msg string
 	var retCode int
 	var checkStateText, msgString string
@@ -20,7 +16,7 @@ func CheckFileExists(pattern string, negate bool) (string, int) {
 
 	switch {
 	case err != nil:
-		checkStateText = unknown
+		checkStateText = statusTextUnknown
 		msgString = fmt.Sprintf("Error matching pattern %s: %s", pattern, err)
 		retCode = 3
 	default:
@@ -29,18 +25,17 @@ func CheckFileExists(pattern string, negate bool) (string, int) {
 		switch {
 		case (matchCount == 0 && negate == false) ||
 			(matchCount > 0 && negate == true):
-			checkStateText = critical
+			checkStateText = statusTextCritical
 			retCode = 2
 		case (matchCount == 0 && negate == true) ||
 			(matchCount > 0 && negate == false):
-			checkStateText = ok
+			checkStateText = statusTextOK
 			retCode = 0
 		}
 
 		msgString = fmt.Sprintf("%s files matched pattern %s", strconv.Itoa(len(matches)), pattern)
 	}
 
-	msg = fmt.Sprintf("%s: %s", checkStateText, msgString)
-
+	msg, _ = resultMessage("CheckFileExists", checkStateText, msgString)
 	return msg, retCode
 }
