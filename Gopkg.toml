@@ -52,3 +52,7 @@
 [[constraint]]
   name = "github.com/thedevsaddam/gojsonq"
   version = "2.2.2"
+
+[[constraint]]
+  name = "github.com/PaesslerAG/gval"
+  version = "1.0.1"

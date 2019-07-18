@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:e3983013d82da8c49fb6776c6317d0da4b9cb926f1bb11af37f8c975889db042"
+  name = "github.com/PaesslerAG/gval"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "0ce847fc5e6163ee05ae770a441ba497fc77dcaa"
+  version = "v1.0.1"
+
+[[projects]]
   digest = "1:e92f5581902c345eb4ceffdcd4a854fb8f73cf436d47d837d1ec98ef1fe0a214"
   name = "github.com/StackExchange/wmi"
   packages = ["."]
@@ -73,6 +81,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/PaesslerAG/gval",
     "github.com/StackExchange/wmi",
     "github.com/pbnjay/memory",
     "github.com/spf13/cobra",
