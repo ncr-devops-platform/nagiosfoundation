@@ -4,7 +4,6 @@ package nagiosfoundation
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/cpu"
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/nagiosformatters"
@@ -32,7 +31,7 @@ func CheckCPUWithHandler(warning, critical int, metricName string, cpuHandler fu
 	if err == nil {
 		msg, retcode = nagiosformatters.GreaterFormatNagiosCheck(checkName, value, float64(warning), float64(critical), metricName)
 	} else {
-		msg = fmt.Sprintf("%s CRITICAL - %s", checkName, err)
+		msg, _ = resultMessage(checkName, statusTextCritical, err.Error())
 		retcode = 2
 	}
 

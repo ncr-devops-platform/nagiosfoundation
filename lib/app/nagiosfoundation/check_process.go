@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+const checkProcessName = "CheckProcess"
+
 func getPidNameWithHandler(readFile func(string) ([]byte, error), pid int) (string, error) {
 	procFile := fmt.Sprintf("/proc/%d/stat", pid)
 	procDataBytes, err := readFile(procFile)
@@ -145,10 +147,10 @@ func checkRunning(processCheck ProcessCheck, invert bool) (string, int) {
 	result := processCheck.IsProcessRunning()
 	if result != invert {
 		retcode = 0
-		responseStateText = "OK"
+		responseStateText = statusTextOK
 	} else {
 		retcode = 2
-		responseStateText = "CRITICAL"
+		responseStateText = statusTextCritical
 	}
 
 	if result == true {
@@ -157,7 +159,8 @@ func checkRunning(processCheck ProcessCheck, invert bool) (string, int) {
 		checkInfo = "not "
 	}
 
-	msg = fmt.Sprintf("CheckProcess %s - Process %s is %srunning", responseStateText, processCheck.ProcessName, checkInfo)
+	msg, _ = resultMessage(checkProcessName, responseStateText,
+		fmt.Sprintf("Process %s is %srunning", processCheck.ProcessName, checkInfo))
 
 	return msg, retcode
 }
@@ -208,7 +211,7 @@ func checkProcessCmd(name string, checkType string, checkProcess func(string, st
 	}
 
 	if invalidParametersMsg != "" {
-		msg = fmt.Sprintf("CheckProcess CRITICAL - %s", invalidParametersMsg)
+		msg, _ = resultMessage(checkProcessName, statusTextCritical, invalidParametersMsg)
 		retcode = 2
 	} else {
 		msg, retcode = checkProcess(name, checkType, processService)

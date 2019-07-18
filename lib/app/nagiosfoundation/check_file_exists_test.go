@@ -23,9 +23,6 @@ func TestCheckFileExists(t *testing.T) {
 	var code int
 	const validTestFile = "validtestfile"
 	const invalidTestFile = "invalidtestfile"
-	const ok = "OK:"
-	const critical = "CRITICAL:"
-	const unknown = "UNKNOWN:"
 
 	type testItem struct {
 		description  string
@@ -41,35 +38,35 @@ func TestCheckFileExists(t *testing.T) {
 			file:         "[]a",
 			inverted:     false,
 			expectedCode: 3,
-			expectedMsg:  unknown,
+			expectedMsg:  statusTextUnknown,
 		},
 		{
 			description:  "File does not exist, not inverted",
 			file:         invalidTestFile,
 			inverted:     false,
 			expectedCode: 2,
-			expectedMsg:  critical,
+			expectedMsg:  statusTextCritical,
 		},
 		{
 			description:  "File does not exist, inverted",
 			file:         invalidTestFile,
 			inverted:     true,
 			expectedCode: 0,
-			expectedMsg:  ok,
+			expectedMsg:  statusTextOK,
 		},
 		{
 			description:  "File exists, not inverted",
 			file:         validTestFile,
 			inverted:     false,
 			expectedCode: 0,
-			expectedMsg:  ok,
+			expectedMsg:  statusTextOK,
 		},
 		{
 			description:  "File exists, inverted",
 			file:         validTestFile,
 			inverted:     true,
 			expectedCode: 2,
-			expectedMsg:  critical,
+			expectedMsg:  statusTextCritical,
 		},
 	}
 
