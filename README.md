@@ -10,7 +10,7 @@ A suite of Nagios style checks and metrics covering the basic needs for monitori
 * [CPU](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_cpu/README.md)
 * [File Exists](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_file_exists/README.md)
 * [HTTP](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_http/README.md)
-* [Memory](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_available_memory/README.md)
+* [Memory](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_memory/README.md)
 * [Performance Counter](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_performance_counter/README.md)
 * [Process](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_process/README.md)
 * [Service](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_service/README.md)
