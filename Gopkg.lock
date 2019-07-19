@@ -44,6 +44,29 @@
   revision = "974d429e7ae40c89e7dcd41cfcc22a0bfbe42510"
 
 [[projects]]
+  digest = "1:7395b855a6078ad2e6c40311402a057a91125fb9f32cf228e1b32cdc57c33538"
+  name = "github.com/shirou/gopsutil"
+  packages = [
+    "cpu",
+    "host",
+    "internal/common",
+    "mem",
+    "net",
+    "process",
+  ]
+  pruneopts = "UT"
+  revision = "8048a2e9c5773235122027dd585cf821b2af1249"
+  version = "v2.18.07"
+
+[[projects]]
+  branch = "master"
+  digest = "1:99c6a6dab47067c9b898e8c8b13d130c6ab4ffbcc4b7cc6236c2cd0b1e344f5b"
+  name = "github.com/shirou/w32"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "bb4de0191aa41b5507caa14b0650cdbddcd9280b"
+
+[[projects]]
   digest = "1:9fb64875be1386e75492979fbec6a89ebf1639fefd08ca85f37868944acf4ab6"
   name = "github.com/spf13/cobra"
   packages = ["."]
@@ -67,9 +90,10 @@
   version = "v2.2.2"
 
 [[projects]]
-  digest = "1:b6e1a0c7832fdadb7f395c33657a39c47abb9103dd3741bd7a5048d72d9419d0"
+  digest = "1:a8226dc96780af51cd3c9d03c5bfec3e5716cc1f3e5bbb88009025ecf078da15"
   name = "golang.org/x/sys"
   packages = [
+    "unix",
     "windows",
     "windows/svc",
     "windows/svc/mgr",
@@ -84,6 +108,7 @@
     "github.com/PaesslerAG/gval",
     "github.com/StackExchange/wmi",
     "github.com/pbnjay/memory",
+    "github.com/shirou/gopsutil/host",
     "github.com/spf13/cobra",
     "github.com/thedevsaddam/gojsonq",
     "golang.org/x/sys/windows",
