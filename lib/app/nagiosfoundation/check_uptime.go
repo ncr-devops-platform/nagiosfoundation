@@ -2,11 +2,12 @@ package nagiosfoundation
 
 import (
 	"fmt"
-	"strconv"
 	
 	"github.com/shirou/gopsutil/host"
-
+	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/nagiosformatters"
 )
+
+//Just a tad bit of error handling
 
 func dealwithErr(err error) {
 	if err != nil {
@@ -15,6 +16,8 @@ func dealwithErr(err error) {
 	}
 }
 
+//getHostUptime simply returns the host uptime as a uint64
+
 func getHostUptime() uint64 {
 	hostStat, err := host.Info()
 	dealwithErr(err)
@@ -22,27 +25,16 @@ func getHostUptime() uint64 {
 }
 
 // CheckUptime gathers information about the host uptime.
-func CheckUptime(warning string) (string, int) {
+func CheckUptime(checkType string, warning, critical int, metricName string) (string, int) {
+	
+	const checkName = "Checkuptime"
+	
 	var msg string
-	var retCode int
-	var checkStateText, msgString string
-
-	switch {
-	default:
-		uptime := getHostUptime()
-		warn,_ := strconv.Atoi(warning)
-		switch {
-		case uptime >= uint64(warn):
-			checkStateText = statusTextCritical
-			msgString = fmt.Sprint("Warning: the system uptime is greater than the specified value. Uptime is: %s",strconv.FormatUint(uptime,10))
-			retCode = 1
-		case uptime < uint64(warn):
-			checkStateText = statusTextOK
-			msgString = fmt.Sprint("System uptime is below the specified value. Uptime is,: %s",strconv.FormatUint(uptime,10))
-			retCode = 0
-		}
-	}
-
-	msg, _ = resultMessage("CheckUptime", checkStateText, msgString)
-	return msg, retCode
+	var retcode int
+	
+	uptime := getHostUptime()
+	
+	msg, retcode = nagiosformatters.GreaterFormatNagiosCheck(checkName, float64(uptime), float64(warning), float64(critical), metricName)
+	
+	return msg, retcode
 }
