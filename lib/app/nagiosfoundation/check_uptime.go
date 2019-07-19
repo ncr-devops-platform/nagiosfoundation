@@ -26,7 +26,7 @@ func getHostUptime() uint64 {
 }
 
 // CheckUptime gathers information about the host uptime.
-func CheckUptime(checkType, warning, critical string, metricName string) (string, int) {
+func CheckUptime(checkType string, warning, critical time.Duration, metricName string) (string, int) {
 	
 	const checkName = "Checkuptime"
 	
@@ -35,13 +35,7 @@ func CheckUptime(checkType, warning, critical string, metricName string) (string
 	
 	uptime := getHostUptime()
 	
-	warnParse, _ := time.ParseDuration(warning)
-	critParse, _ := time.ParseDuration(critical)
-	
-	warningSecs := warnParse / time.Nanosecond
-	criticalSecs := critParse / time.Nanosecond
-	
-	msg, retcode = nagiosformatters.GreaterFormatNagiosCheck(checkName, float64(uptime), float64(warningSecs), float64(criticalSecs), metricName)
+	msg, retcode = nagiosformatters.GreaterFormatNagiosCheck(checkName, float64(uptime), float64(warning.Seconds()), float64(critical.Seconds()), metricName)
 	
 	return msg, retcode
 }
