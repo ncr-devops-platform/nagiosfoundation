@@ -1,37 +1,13 @@
-# File Exists Check
+# Uptime Check
+The uptime check (`check_uptime`) system uptime. The uptime value is then compared against the `--warning` and `--critical` thresholds and an appropriate check result is output.
 
-Tests for the existence of one or more files matching the specified globbing pattern:
-
-`OK`: One or more files matched the globbing pattern.
-
-`CRITICAL`: No files matched the globbing pattern.
-
-When the `--negate` flag is used, the test logic is inverted:
-
-`OK`: No files matched the globbing pattern.
-
-`CRITICAL`: One or more files matched the globbing pattern.
-
-## Options
-
-* `--pattern (-p)`: Filepath or globbing pattern to check for one or more existing file
-* `--negate (-n)`: If set, asserts filepath or globbing pattern should not match an existing file
-
-## Globbing patterns
-
-[File globbing patterns specify sets of filenames using wildcard characters.][1]
-
-This plugin currently uses golang's `filepath.Glob` and therefore [does not support the ** double-star or globstar operator][2].
+## Flags
+* `--warning`: The desired time (in seconds) of uptime required to trigger a warning condition. Default is 72 hours (`259200`).
+* `--critical`: The desired time (in seconds) of uptime required to trigger a critical condition. Default  is 1 week (`604800`).
+* `--metric_name`: The name used in the Nagios portion of the message output. Default `current_system_uptime`.
 
 ## Examples
-
-Return OK if `/etc/resolv.conf` exists:
-
-`check_file_exists --pattern /etc/resolv.conf`
-
-Return a critical if files with `.dmp` extension exist in `/var/tmp`:
-
-`check_file_exists --pattern '/var/tmp/*.dmp' --negate`
-
-[1]: https://en.wikipedia.org/wiki/Glob_%28programming%29
-[2]: https://www.client9.com/golang-globs-and-the-double-star-glob-operator/
+Issue a warning if uptime usage is over 50% and critical if usage is over the default of 95%.
+```
+check_uptime --warning 7200 --critical 14200
+```
