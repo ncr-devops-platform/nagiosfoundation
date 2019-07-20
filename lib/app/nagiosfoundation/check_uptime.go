@@ -8,34 +8,22 @@ import (
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/nagiosformatters"
 )
 
-//Just a tad bit of error handling
-
-func dealwithErr(err error) {
-	if err != nil {
-		fmt.Println(err)
-		//os.Exit(-1)
-	}
-}
-
-//getHostUptime simply returns the host uptime as a uint64
-
-func getHostUptime() uint64 {
-	hostStat, err := host.Info()
-	dealwithErr(err)
-	return hostStat.Uptime
-}
-
 // CheckUptime gathers information about the host uptime.
 func CheckUptime(checkType string, warning, critical time.Duration, metricName string) (string, int) {
 	
-	const checkName = "Checkuptime"
+	const checkName = "CheckUptime"
 	
 	var msg string
 	var retcode int
 	
-	uptime := getHostUptime()
+	uptime, err := host.Uptime()
 	
-	msg, retcode = nagiosformatters.GreaterFormatNagiosCheck(checkName, float64(uptime), float64(warning.Seconds()), float64(critical.Seconds()), metricName)
+	if err != nil {
+		msg, _ = resultMessage(checkName, statusTextCritical, fmt.Sprintf("Failed to determin uptime %s", err.Error()))
+		retcode = 2
+	} else {
+		msg, retcode = nagiosformatters.GreaterFormatNagiosCheck(checkName, float64(uptime), float64(warning.Seconds()), float64(critical.Seconds()), metricName)
+	}
 	
 	return msg, retcode
 }

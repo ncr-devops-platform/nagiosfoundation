@@ -7,7 +7,7 @@ The uptime check (`check_uptime`) system uptime. The uptime value is then compar
 * `--metric_name`: The name used in the Nagios portion of the message output. Default `current_system_uptime`.
 
 ## Examples
-Issue a warning if uptime usage is over 50% and critical if usage is over the default of 95%.
+Issue a warning if uptime is over 72 hours and critical if uptime is over the default of 1 week.
 ```
 check_uptime --warning 72h --critical 168h
 ```
