@@ -156,7 +156,7 @@ func TestAcceptText(t *testing.T) {
 func TestEvaluateStatusCode(t *testing.T) {
 	// http.StatusBadRequest
 	expectedCode := 2
-	expectedText := "CRITICAL"
+	expectedText := statusTextCritical
 	actualCode, actualText := evaluateStatusCode(http.StatusBadRequest, false)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateStatusCode() with http.StatusBadRequest expected code of %d but returned %d", expectedCode, actualCode)
@@ -168,7 +168,7 @@ func TestEvaluateStatusCode(t *testing.T) {
 
 	// http.StatusMultipleChoices with redirect false
 	expectedCode = 1
-	expectedText = "WARNING"
+	expectedText = statusTextWarning
 	actualCode, actualText = evaluateStatusCode(http.StatusMultipleChoices, false)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateStatusCode() with http.StatusMultipleChoices and redirect false expected code of %d but returned %d", expectedCode, actualCode)
@@ -180,7 +180,7 @@ func TestEvaluateStatusCode(t *testing.T) {
 
 	// http.StatusMultipleChoices with redirect true
 	expectedCode = 0
-	expectedText = "OK"
+	expectedText = statusTextOK
 	actualCode, actualText = evaluateStatusCode(http.StatusMultipleChoices, true)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateStatusCode() with http.StatusMultipleChoices and redirect true expected code of %d but returned %d", expectedCode, actualCode)
@@ -192,7 +192,7 @@ func TestEvaluateStatusCode(t *testing.T) {
 
 	// http.StatusOK
 	expectedCode = 0
-	expectedText = "OK"
+	expectedText = statusTextOK
 	actualCode, actualText = evaluateStatusCode(http.StatusOK, false)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateStatusCode() with http.StatusOK expected code of %d but returned %d", expectedCode, actualCode)
@@ -204,7 +204,7 @@ func TestEvaluateStatusCode(t *testing.T) {
 
 	// Unknown (-1)
 	expectedCode = 2
-	expectedText = "UNKNOWN ERROR"
+	expectedText = statusTextUnknown
 	actualCode, actualText = evaluateStatusCode(-1, false)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateStatusCode() with -1 expected code of %d but returned %d", expectedCode, actualCode)
@@ -222,7 +222,7 @@ func TestEvaluateExpectedValue(t *testing.T) {
 	testPath := "testpath"
 
 	expectedCode := 0
-	expectedText := "OK"
+	expectedText := statusTextOK
 	actualCode, actualText, _ := evaluateExpectedValue(actualValue, expectedGoodValue, testPath)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateExpectedValue() returned actual code of %d when expecting %d", actualCode, expectedCode)
@@ -233,7 +233,7 @@ func TestEvaluateExpectedValue(t *testing.T) {
 	}
 
 	expectedCode = 2
-	expectedText = "CRITICAL"
+	expectedText = statusTextCritical
 	actualCode, actualText, _ = evaluateExpectedValue(actualValue, expectedBadValue, testPath)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateExpectedValue() returned actual code of %d when expecting %d", actualCode, expectedCode)
@@ -252,7 +252,7 @@ func TestEvaluateExpression(t *testing.T) {
 	testPath := "testpath"
 
 	expectedCode := 0
-	expectedText := "OK"
+	expectedText := statusTextOK
 	actualCode, actualText, _ := evaluateExpression(actualValue, trueExpression, testPath)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateExpression() returned actual code of %d when expecting %d", actualCode, expectedCode)
@@ -263,7 +263,7 @@ func TestEvaluateExpression(t *testing.T) {
 	}
 
 	expectedCode = 2
-	expectedText = "CRITICAL"
+	expectedText = statusTextCritical
 	actualCode, actualText, _ = evaluateExpression(actualValue, falseExpression, testPath)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateExpression() returned actual code of %d when expecting %d", actualCode, expectedCode)
@@ -274,7 +274,7 @@ func TestEvaluateExpression(t *testing.T) {
 	}
 
 	expectedCode = 2
-	expectedText = "CRITICAL"
+	expectedText = statusTextCritical
 	actualCode, actualText, _ = evaluateExpression(actualValue, falseExpression, testPath)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateExpression() returned actual code of %d when expecting %d", actualCode, expectedCode)
@@ -285,7 +285,7 @@ func TestEvaluateExpression(t *testing.T) {
 	}
 
 	expectedCode = 2
-	expectedText = "CRITICAL"
+	expectedText = statusTextCritical
 	actualCode, actualText, _ = evaluateExpression(actualValue, errorExpression, testPath)
 	if actualCode != expectedCode {
 		t.Errorf("evaluateExpression() returned actual code of %d when expecting %d", actualCode, expectedCode)

@@ -36,19 +36,19 @@ func evaluateStatusCode(status int, redirect bool) (int, string) {
 	switch {
 	case status >= http.StatusBadRequest:
 		retCode = 2
-		responseStateText = "CRITICAL"
+		responseStateText = statusTextCritical
 	case status >= http.StatusMultipleChoices && redirect:
 		retCode = 0
-		responseStateText = "OK"
+		responseStateText = statusTextOK
 	case status >= http.StatusMultipleChoices:
 		retCode = 1
-		responseStateText = "WARNING"
+		responseStateText = statusTextWarning
 	case status == -1:
 		retCode = 2
-		responseStateText = "UNKNOWN ERROR"
+		responseStateText = statusTextUnknown
 	default:
 		retCode = 0
-		responseStateText = "OK"
+		responseStateText = statusTextOK
 	}
 
 	return retCode, responseStateText
@@ -60,11 +60,11 @@ func evaluateExpectedValue(actualValue, expectedValue, path string) (int, string
 
 	if actualValue == expectedValue {
 		retCode = 0
-		responseStateText = "OK"
+		responseStateText = statusTextOK
 		checkMsg = fmt.Sprintf(". The value found at %s has expected value %s", path, expectedValue)
 	} else {
 		retCode = 2
-		responseStateText = "CRITICAL"
+		responseStateText = statusTextCritical
 		checkMsg = fmt.Sprintf(". The value found at %s has unexpected value %s", path, actualValue)
 	}
 
@@ -79,16 +79,16 @@ func evaluateExpression(actualValue interface{}, expression, path string) (int, 
 	if err == nil {
 		if evalResult == true {
 			retCode = 0
-			responseStateText = "OK"
+			responseStateText = statusTextOK
 			checkMsg = fmt.Sprintf(". The value found at %s with value %v and expression \"%s\" yields true", path, actualValue, expression)
 		} else {
 			retCode = 2
-			responseStateText = "CRITICAL"
+			responseStateText = statusTextCritical
 			checkMsg = fmt.Sprintf(". The value found at %s with value %v does not match expression \"%s\"", path, actualValue, expression)
 		}
 	} else {
 		retCode = 2
-		responseStateText = "CRITICAL"
+		responseStateText = statusTextCritical
 		checkMsg = fmt.Sprintf(". Error processing value found at %s with value %v using expression \"%s\": %s", path, actualValue, expression, err)
 	}
 
@@ -97,13 +97,15 @@ func evaluateExpression(actualValue interface{}, expression, path string) (int, 
 
 // CheckHTTP attempts an HTTP request against the provided url, reporting the HTTP response code and overall request state.
 func CheckHTTP(url string, redirect bool, timeout int, format, path, expectedValue, expression string) (string, int) {
+	const checkName = "CheckHttp"
 	var retCode int
 	var msg string
 
 	acceptText, err := getAcceptText(format)
 	if err != nil {
-		return fmt.Sprintf("CheckHttp CRITICAL - The format (--format) \"%s\" is not valid. The only valid value is \"json\".", format),
-			2
+		msg, _ = resultMessage(checkName, statusTextCritical, fmt.Sprintf("The format (--format) \"%s\" is not valid. The only valid value is \"json\".", format))
+
+		return msg, 2
 	}
 
 	status, body, _ := statusCode(url, timeout, acceptText)
@@ -124,11 +126,11 @@ func CheckHTTP(url string, redirect bool, timeout int, format, path, expectedVal
 
 			if value == nil {
 				retCode = 2
-				responseStateText = "CRITICAL"
+				responseStateText = statusTextCritical
 				checkMsg = fmt.Sprintf(". No entry at path %s", path)
 			} else if expectedValueLen > 0 && expressionLen > 0 {
 				retCode = 2
-				responseStateText = "CRITICAL"
+				responseStateText = statusTextCritical
 				checkMsg = fmt.Sprintf(". Both --expectedValue and --expression given but only one is used")
 			} else if expectedValueLen > 0 {
 				queryValue = fmt.Sprintf("%v", value)
@@ -137,13 +139,13 @@ func CheckHTTP(url string, redirect bool, timeout int, format, path, expectedVal
 				retCode, responseStateText, checkMsg = evaluateExpression(value, expression, path)
 			} else {
 				retCode = 2
-				responseStateText = "CRITICAL"
+				responseStateText = statusTextCritical
 				checkMsg = fmt.Sprintf(". --expectedValue or --expression not given")
 			}
 		}
 	}
 
-	msg = fmt.Sprintf("CheckHttp %s - Url %s responded with %s%s", responseStateText, url, responseCode, checkMsg)
+	msg, _ = resultMessage(checkName, responseStateText, fmt.Sprintf("Url %s responded with %s%s", url, responseCode, checkMsg))
 
 	return msg, retCode
 }
@@ -168,5 +170,6 @@ func statusCode(url string, timeout int, accept string) (int, string, error) {
 	if readErr != nil {
 		return -1, "", readErr
 	}
+
 	return response.StatusCode, string(body), nil
 }

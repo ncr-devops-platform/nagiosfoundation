@@ -2,7 +2,6 @@ package nagiosfoundation
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/memory"
 	"github.com/ncr-devops-platform/nagiosfoundation/lib/pkg/nagiosformatters"
@@ -24,10 +23,14 @@ func CheckMemoryWithHandler(checkType string, warning, critical int, metricName 
 		err = errors.New("No used memory percentage service")
 	} else {
 		usedMemoryPercentage = memoryHandler()
+
+		if usedMemoryPercentage == 0 {
+			err = errors.New("Failed to determine used memory percentage")
+		}
 	}
 
-	if err != nil || usedMemoryPercentage == 0 {
-		msg = fmt.Sprintf("%s CRITICAL - %s", checkName, err)
+	if err != nil {
+		msg, _ = resultMessage(checkName, statusTextCritical, err.Error())
 		retcode = 2
 	} else {
 		msg, retcode = nagiosformatters.GreaterFormatNagiosCheck(checkName, float64(usedMemoryPercentage), float64(warning), float64(critical), metricName)
