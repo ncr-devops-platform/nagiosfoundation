@@ -14,6 +14,7 @@ A suite of Nagios style checks and metrics covering the basic needs for monitori
 * [Performance Counter](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_performance_counter/README.md)
 * [Process](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_process/README.md)
 * [Service](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_service/README.md)
+* [Uptime](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_uptime/README.md)
 * [User and Group](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_user_group/README.md)
 
 ## Using
