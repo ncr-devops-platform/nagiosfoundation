@@ -1,0 +1,34 @@
+---
+description: "#{repo}"
+builds:
+- platform: "linux"
+  arch: "amd64"
+  asset_filename: "#{repo}-linux-amd64-#{version}.tgz"
+  sha_filename: "#{repo}-linux-amd64-#{version}-sha512.txt"
+  filter:
+  -  "entity.system.os == 'linux'"
+  -  "entity.system.arch == 'amd64'"
+
+- platform: "linux"
+  arch: "386"
+  asset_filename: "#{repo}-linux-386-#{version}.tgz"
+  sha_filename: "#{repo}-linux-386-#{version}-sha512.txt"
+  filter:
+  -  "entity.system.os == 'linux'"
+  -  "entity.system.arch == '386'"
+
+- platform: "Windows"
+  arch: "amd64"
+  asset_filename: "#{repo}-windows-amd64-#{version}.tgz"
+  sha_filename: "#{repo}-windows-amd64-#{version}-sha512.txt"
+  filter:
+  -  "entity.system.os == 'windows'"
+  -  "entity.system.arch == 'amd64'"
+
+- platform: "Windows"
+  arch: "amd64"
+  asset_filename: "#{repo}-windows-386-#{version}.tgz"
+  sha_filename: "#{repo}-windows-386-#{version}-sha512.txt"
+  filter:
+  -  "entity.system.os == 'windows'"
+  -  "entity.system.arch == '386'"
