@@ -26,7 +26,7 @@ builds:
   -  "entity.system.arch == 'amd64'"
 
 - platform: "Windows"
-  arch: "amd64"
+  arch: "386"
   asset_filename: "#{repo}-windows-386-#{version}.tgz"
   sha_filename: "#{repo}-windows-386-#{version}-sha512.txt"
   filter:
