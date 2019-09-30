@@ -6,8 +6,6 @@ package_path = ./out/package
 package_version = $(package_path)/$(version)
 platforms = windows-amd64 linux-amd64 windows-386 linux-386
 
-export GO111MODULE=on
-
 package: $(platforms)
 
 clean:
