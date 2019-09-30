@@ -60,7 +60,7 @@ func TestCheckUser(t *testing.T) {
 		UserName:  goodUserGroupString,
 		GroupName: "",
 		Service:   new(userGroupTestHandler),
-	}).CheckUser(); retval != 0 {
+	}).CheckUser(); retval != statusCodeOK {
 		t.Error("CheckUser() with good user failed")
 	}
 
@@ -68,7 +68,7 @@ func TestCheckUser(t *testing.T) {
 		UserName:  badUserGroupString,
 		GroupName: "",
 		Service:   new(userGroupTestHandler),
-	}).CheckUser(); retval != 3 {
+	}).CheckUser(); retval != statusCodeCritical {
 		t.Error("CheckUser() with bad user failed")
 	}
 }
@@ -81,7 +81,7 @@ func TestCheckGroup(t *testing.T) {
 		UserName:  "",
 		GroupName: goodUserGroupString,
 		Service:   handler,
-	}).CheckGroup(); retval != 0 {
+	}).CheckGroup(); retval != statusCodeOK {
 		t.Error("CheckGroup() with good group failed")
 	}
 
@@ -89,7 +89,7 @@ func TestCheckGroup(t *testing.T) {
 		UserName:  "",
 		GroupName: badUserGroupString,
 		Service:   handler,
-	}).CheckGroup(); retval != 3 {
+	}).CheckGroup(); retval != statusCodeCritical {
 		t.Error("CheckGroup() with bad group failed")
 	}
 }
@@ -102,7 +102,7 @@ func TestCheckUserGroup(t *testing.T) {
 		UserName:  goodUserGroupString,
 		GroupName: goodUserGroupString,
 		Service:   handler,
-	}).CheckUserGroup(); retval != 0 {
+	}).CheckUserGroup(); retval != statusCodeOK {
 		t.Error("CheckGroup() with good user and good group failed")
 	}
 
@@ -110,7 +110,7 @@ func TestCheckUserGroup(t *testing.T) {
 		UserName:  errorUserGroupString,
 		GroupName: goodUserGroupString,
 		Service:   handler,
-	}).CheckUserGroup(); retval != 3 {
+	}).CheckUserGroup(); retval != statusCodeCritical {
 		t.Error("CheckGroup() with GroupIds() returning error failed")
 	}
 
@@ -118,7 +118,7 @@ func TestCheckUserGroup(t *testing.T) {
 		UserName:  goodUserGroupString,
 		GroupName: badUserGroupString,
 		Service:   handler,
-	}).CheckUserGroup(); retval != 3 {
+	}).CheckUserGroup(); retval != statusCodeCritical {
 		t.Error("CheckGroup() with good user and bad group failed")
 	}
 
@@ -126,7 +126,7 @@ func TestCheckUserGroup(t *testing.T) {
 		UserName:  badUserGroupString,
 		GroupName: badUserGroupString,
 		Service:   handler,
-	}).CheckUserGroup(); retval != 3 {
+	}).CheckUserGroup(); retval != statusCodeCritical {
 		t.Error("CheckGroup() with bad user and bad group failed")
 	}
 
@@ -134,7 +134,7 @@ func TestCheckUserGroup(t *testing.T) {
 		UserName:  badUserGroupString,
 		GroupName: goodUserGroupString,
 		Service:   handler,
-	}).CheckUserGroup(); retval != 3 {
+	}).CheckUserGroup(); retval != statusCodeCritical {
 		t.Error("CheckGroup() with bad user and good group failed")
 	}
 }
@@ -143,17 +143,47 @@ func TestCheckUserGroupWithFlags(t *testing.T) {
 	handler := new(userGroupTestHandler)
 
 	_, err := CheckUserGroupWithHandler(goodUserGroupString, "", handler)
-	if err != 0 {
-		t.Error("CheckUserGroup with -user flag failed")
+	if err != statusCodeOK {
+		t.Error("CheckUserGroup with --user flag failed")
 	}
 
 	_, err = CheckUserGroupWithHandler("", goodUserGroupString, handler)
-	if err != 0 {
-		t.Error("CheckUserGroup with -group flag failed")
+	if err != statusCodeOK {
+		t.Error("CheckUserGroup with --group flag failed")
 	}
 
 	_, err = CheckUserGroupWithHandler(goodUserGroupString, goodUserGroupString, handler)
-	if err != 0 {
-		t.Error("CheckUserGroup with -user and -group flags failed")
+	if err != statusCodeOK {
+		t.Error("CheckUserGroup with --user and --group flags failed")
+	}
+}
+
+func TestOsUserCalls(t *testing.T) {
+	ugh := UserGroupHandler{}
+
+	currentUser, err := user.Current()
+	if err != nil {
+		t.Error("Lookingup current user")
+	}
+
+	// Lookup Group by ID
+	groupByID, err := ugh.LookupGroupID(currentUser.Gid)
+	if err != nil {
+		t.Error("Lookup current user primary group ID")
+	}
+
+	// Lookup Group by Name
+	groupByName, err := ugh.LookupGroup(groupByID.Name)
+	if err != nil {
+		t.Error("Lookup primary group ID by name")
+	}
+
+	if groupByID.Gid != groupByName.Gid {
+		t.Error("Lookup group by ID does not match lookup group by name")
+	}
+
+	_, result := CheckUserGroup(currentUser.Username, groupByID.Name)
+	if result != 0 {
+		t.Error("Check for current user name and group ID")
 	}
 }

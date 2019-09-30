@@ -15,14 +15,14 @@ func Execute() {
 	var metricName string
 
 	var rootCmd = &cobra.Command{
-		Use:   "check_available_memory",
+		Use:   "check_memory",
 		Short: "Determine if memory used exceeds percentage threshold.",
-		Long: `Determines the percentage of memory used and if over the --criticial
+		Long: `Determines the percentage of memory used and if over the --critical
 threshold issue a CRITICAL response, then check if over the --warning threshold,
 issue a WARNING response. Otherwise, an OK response is issued.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
-			msg, retval := nagiosfoundation.CheckAvailableMemory(warning, critical, metricName)
+			msg, retval := nagiosfoundation.CheckMemory("", warning, critical, metricName)
 
 			fmt.Println(msg)
 			os.Exit(retval)

@@ -22,5 +22,6 @@ Some examples:
 func addFlagsOsConstrained(cmd *cobra.Command) {
 	cmd.Flags().StringVarP(&state, "state", "s", "", "the desired state of the service")
 	cmd.Flags().StringVarP(&user, "user", "u", "", "the user the service should run as")
+	cmd.Flags().BoolVarP(&currentStateWanted, currentStateWantedFlag, "c", false, "output the Windows service state in nagios output")
 	cmd.Flags().StringVarP(&manager, serviceManagerFlag, "m", "wmi", "Service manager. Allowed options are: \"wmi\" and \"svcmgr\"")
 }

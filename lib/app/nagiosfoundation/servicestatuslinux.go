@@ -10,7 +10,7 @@ import (
 
 // Not Used
 //
-// To be impemented in the future to make this Linux module
+// To be implemented in the future to make this Linux module
 // compliant with the serviceInfo structure like the Windows
 // version is.
 //
@@ -27,13 +27,14 @@ func getInfoOsConstrained(name string) (string, string, string, error) {
 	return "", "", "", nil
 }
 
-func systemdServiceTest(serviceName string) (string, int) {
+func systemdServiceTest(serviceName string, currentStateWanted bool) (string, int) {
 	cmd := exec.Command("systemctl", "check", serviceName)
 	out, err := cmd.CombinedOutput()
 	state := strings.TrimSpace(string(out))
 
 	var retcode int
 	var info string
+	var serviceState int
 
 	if err != nil {
 		if _, ok := err.(*exec.ExitError); ok {
@@ -43,8 +44,11 @@ func systemdServiceTest(serviceName string) (string, int) {
 			info = fmt.Sprintf("Failed to execute systemctl. %s Status unknown: %v", serviceName, err)
 			retcode = 2
 		}
+
+		serviceState = 0
 	} else {
 		info = fmt.Sprintf("%s in a running state", serviceName)
+		serviceState = 1
 		retcode = 0
 	}
 
@@ -59,16 +63,23 @@ func systemdServiceTest(serviceName string) (string, int) {
 	}
 
 	msg := fmt.Sprintf("%s %s - %s%s", serviceCheckName, responseStateText, info, actualInfo)
+
+	if currentStateWanted {
+		msg = msg + fmt.Sprintf(" | service_state=%d service_name=%s",
+			serviceState, serviceName)
+		retcode = 0
+	}
+
 	return msg, retcode
 }
 
-func checkServiceOsConstrained(name string, state string, user string, manager string) (string, int) {
+func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, manager string) (string, int) {
 	var msg string
 	var retcode int
 
 	switch manager {
 	case "systemd":
-		msg, retcode = systemdServiceTest(name)
+		msg, retcode = systemdServiceTest(name, currentStateWanted)
 	default:
 		msg = fmt.Sprintf("%s CRITICAL - %s is not a valid service manager.", serviceCheckName, manager)
 		retcode = 2
