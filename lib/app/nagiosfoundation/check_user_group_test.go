@@ -157,3 +157,33 @@ func TestCheckUserGroupWithFlags(t *testing.T) {
 		t.Error("CheckUserGroup with -user and -group flags failed")
 	}
 }
+
+func TestOsUserCalls(t *testing.T) {
+	ugh := UserGroupHandler{}
+
+	currentUser, err := user.Current()
+	if err != nil {
+		t.Error("Lookingup current user")
+	}
+
+	// Lookup Group by ID
+	groupByID, err := ugh.LookupGroupID(currentUser.Gid)
+	if err != nil {
+		t.Error("Lookup current user primary group ID")
+	}
+
+	// Lookup Group by Name
+	groupByName, err := ugh.LookupGroup(groupByID.Name)
+	if err != nil {
+		t.Error("Lookup primary group ID by name")
+	}
+
+	if groupByID.Gid != groupByName.Gid {
+		t.Error("Lookup group by ID does not match lookup group by name")
+	}
+
+	_, result := CheckUserGroup(currentUser.Username, groupByID.Name)
+	if result != 0 {
+		t.Error("Check for current user name and group ID")
+	}
+}
