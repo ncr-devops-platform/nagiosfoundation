@@ -12,6 +12,13 @@ const (
 	statusTextUnknown  = "UNKNOWN"
 )
 
+const (
+	statusCodeOK = iota
+	statusCodeWarning
+	statusCodeCritical
+	statusCodeUnknown
+)
+
 var errResultMsgNotEnoughArgs = errors.New("Not enough arguments")
 var errResultMsgTooManyArgs = errors.New("Too many arguments")
 var errResultMsgInvalidStatus = errors.New("Invalid status text")

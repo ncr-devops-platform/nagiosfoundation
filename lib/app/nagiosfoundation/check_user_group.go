@@ -69,7 +69,7 @@ type UserGroupCheck struct {
 // operating system.
 //
 // Returns a string containing plaintext result and an integer
-// with the return code. 0 indicates the user exists, 3 indicates
+// with the return code. 0 indicates the user exists, 2 indicates
 // the user does not exist.
 func (ugc UserGroupCheck) CheckUser() (string, int) {
 	var retCode int
@@ -80,11 +80,11 @@ func (ugc UserGroupCheck) CheckUser() (string, int) {
 	if err == nil {
 		formatString = "User %s exists"
 		status = statusTextOK
-		retCode = 0
+		retCode = statusCodeOK
 	} else {
 		formatString = "User %s does not exist"
 		status = statusTextCritical
-		retCode = 3
+		retCode = statusCodeCritical
 	}
 
 	msg, _ := resultMessage(checkUserName, status, fmt.Sprintf(formatString, ugc.UserName))
@@ -95,7 +95,7 @@ func (ugc UserGroupCheck) CheckUser() (string, int) {
 // operating system.
 //
 // Returns a string containing plaintext result and an integer
-// with the return code. 0 indicates the group exists, 3 indicates
+// with the return code. 0 indicates the group exists, 2 indicates
 // the group does not exist.
 func (ugc UserGroupCheck) CheckGroup() (string, int) {
 	var retCode int
@@ -106,11 +106,11 @@ func (ugc UserGroupCheck) CheckGroup() (string, int) {
 	if err == nil {
 		formatString = "Group %s exists"
 		status = statusTextOK
-		retCode = 0
+		retCode = statusCodeOK
 	} else {
 		formatString = "Group %s does not exist"
 		status = statusTextCritical
-		retCode = 3
+		retCode = statusCodeCritical
 	}
 
 	msg, _ := resultMessage(checkGroupName, status, fmt.Sprintf(formatString, ugc.GroupName))
@@ -122,10 +122,10 @@ func (ugc UserGroupCheck) CheckGroup() (string, int) {
 //
 // Returns a string containing plaintext result and an integer
 // with the return code. 0 indicates the user exists and is in
-// the group, 3 indicates otherwise.
+// the group, 2 indicates otherwise.
 func (ugc UserGroupCheck) CheckUserGroup() (string, int) {
 	var msg, status string
-	retcode := 3
+	retcode := statusCodeCritical
 
 	userInfo, err := ugc.Service.Lookup(ugc.UserName)
 	if err != nil {
@@ -147,7 +147,7 @@ func (ugc UserGroupCheck) CheckUserGroup() (string, int) {
 					msg = fmt.Sprintf("User %s exists and is in Group %s",
 						ugc.UserName, ugc.GroupName)
 					status = statusTextOK
-					retcode = 0
+					retcode = statusCodeOK
 				}
 			}
 		}
