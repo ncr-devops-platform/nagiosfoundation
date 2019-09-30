@@ -1,7 +1,7 @@
 language: go
 
 go:
-  - 1.12.x
+  - 1.13.x
 
 # Only clone the most recent commit.
 git:
@@ -12,15 +12,15 @@ install:
     if [ ! -d /home/travis/gopath/src/github.com/ncr-devops-platform ]; then
       mv /home/travis/gopath/src/github.com/* /home/travis/gopath/src/github.com/ncr-devops-platform
     fi
-  - mv /home/travis/gopath/src/github.com/ncr-devops-platform/nagios-foundation /home/travis/gopath/src/github.com/ncr-devops-platform/nagiosfoundation
   - git checkout .
   - ./godelw version
   - ./godelw project-version
 
 script:
-  - GO111MODULE=on go test -race -coverprofile=coverage.txt -covermode=atomic -v ./... && bash <(curl -s https://codecov.io/bash)
+  - go test -race -coverprofile=coverage.txt -covermode=atomic -v ./... && bash <(curl -s https://codecov.io/bash)
   - make clean
   - make package
+  - scripts/validate-version.sh
 
 deploy:
   provider: releases
