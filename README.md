@@ -1,7 +1,7 @@
 # nagiosfoundation
 
 [![Build Status](https://travis-ci.org/ncr-devops-platform/nagiosfoundation.svg?branch=master)](https://travis-ci.org/ncr-devops-platform/nagiosfoundation)
-[![codecov](https://codecov.io/gh/ncr-devops-platform/nagios-foundation/branch/master/graph/badge.svg)](https://codecov.io/gh/ncr-devops-platform/nagios-foundation)
+[![codecov](https://codecov.io/gh/ncr-devops-platform/nagiosfoundation/branch/master/graph/badge.svg)](https://codecov.io/gh/ncr-devops-platform/nagiosfoundation)
 
 A suite of Nagios style checks and metrics covering the basic needs for monitoring in a Sensu-like system.
 
