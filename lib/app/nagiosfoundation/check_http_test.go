@@ -24,63 +24,63 @@ func TestCheckHTTP(t *testing.T) {
 
 	// Code 200
 	httpStatus = http.StatusOK
-	_, code := CheckHTTP(httpServer.URL, false, 1, format, path, expectedValue, "")
+	_, code := CheckHTTP(httpServer.URL, false, false, 1, format, path, expectedValue, "")
 	if code != 0 {
 		t.Error("CheckHTTP() should return code of 0 when on OK (200) response")
 	}
 
 	// Code 400
 	httpStatus = http.StatusBadRequest
-	_, code = CheckHTTP(httpServer.URL, false, 1, format, path, expectedValue, "")
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, format, path, expectedValue, "")
 	if code != 2 {
 		t.Error("CheckHTTP() should return code of 2 when on bad request (400) response")
 	}
 
 	// Code 300
 	httpStatus = http.StatusMultipleChoices
-	_, code = CheckHTTP(httpServer.URL, false, 1, format, path, expectedValue, "")
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, format, path, expectedValue, "")
 	if code != 1 {
 		t.Error("CheckHTTP() should return code of 2 when on multiple choices (300) response")
 	}
 
 	// Code 300 with redirect on
 	httpStatus = http.StatusMultipleChoices
-	_, code = CheckHTTP(httpServer.URL, true, 1, format, path, expectedValue, "")
+	_, code = CheckHTTP(httpServer.URL, true, false, 1, format, path, expectedValue, "")
 	if code != 0 {
 		t.Error("CheckHTTP() should return code of 0 when on multiple choices (300) with redirect response")
 	}
 
 	// Code 200 with format json and a match on expected value
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP(httpServer.URL, false, 1, "json", "id", idValueString, "")
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, "json", "id", idValueString, "")
 	if code != 0 {
 		t.Error("CheckHTTP() should return code of 0 when json path matches expected value")
 	}
 
 	// Code 200 with format json and failed match on expected value
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP(httpServer.URL, false, 1, "json", "id", "failmatch", "")
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, "json", "id", "failmatch", "")
 	if code != 2 {
 		t.Error("CheckHTTP() should return code of 2 when json path does not match expected value")
 	}
 
 	// Code 200 with format json and expression true
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP(httpServer.URL, false, 1, "json", "id", "", "!= \""+idValueString+"\"")
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, "json", "id", "", "!= \""+idValueString+"\"")
 	if code != 2 {
 		t.Error("CheckHTTP() should return code of 2 when json path causes expression to return false")
 	}
 
 	// Code 200 with format json and no expected value or expression
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP(httpServer.URL, false, 1, "json", "id", "", "")
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, "json", "id", "", "")
 	if code != 2 {
 		t.Error("CheckHTTP() should return code of 2 with json path but no expected value or expression")
 	}
 
 	// Code 200 with format json and but both expected value and expression given
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP(httpServer.URL, false, 1, "json", "id", "expectedvalue", "expression")
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, "json", "id", "expectedvalue", "expression")
 	if code != 2 {
 		t.Error("CheckHTTP() should return code of 2 with json path but no expected value or expression")
 	}
@@ -88,7 +88,7 @@ func TestCheckHTTP(t *testing.T) {
 	// Code 200 with format json and expression true using integer
 	responseBody = `{"id":` + idValueString + `}`
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP(httpServer.URL, false, 1, "json", "id", "", "== "+idValueString)
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, "json", "id", "", "== "+idValueString)
 	if code != 0 {
 		t.Errorf("CheckHTTP() should return code of 0 with json path but and comparison to int %d", idValue)
 	}
@@ -96,7 +96,7 @@ func TestCheckHTTP(t *testing.T) {
 	// Invalid format
 	responseBody = `{"id":` + idValueString + `}`
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP(httpServer.URL, false, 1, "invalidformat", "id", "", "== "+idValueString)
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, "invalidformat", "id", "", "== "+idValueString)
 	if code != 2 {
 		t.Errorf("CheckHTTP() should return code of 2 when given an invalid format")
 	}
@@ -104,7 +104,7 @@ func TestCheckHTTP(t *testing.T) {
 	// Invalid path
 	responseBody = `{"id":` + idValueString + `}`
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP(httpServer.URL, false, 1, "json", "invalidpath", "", "== "+idValueString)
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, "json", "invalidpath", "", "== "+idValueString)
 	if code != 2 {
 		t.Errorf("CheckHTTP() should return code of 2 when given an invalid path")
 	}
@@ -114,16 +114,36 @@ func TestCheckHTTP(t *testing.T) {
 
 	// No server for connection
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP(httpServer.URL, false, 1, format, path, expectedValue, "")
+	_, code = CheckHTTP(httpServer.URL, false, false, 1, format, path, expectedValue, "")
 	if code != 2 {
 		t.Error("CheckHTTP() should return code of 2 when no server is available")
 	}
 
 	// Invalid URL
 	httpStatus = http.StatusOK
-	_, code = CheckHTTP("invalid%url", false, 1, format, path, expectedValue, "")
+	_, code = CheckHTTP("invalid%url", false, false, 1, format, path, expectedValue, "")
 	if code != 2 {
 		t.Error("CheckHTTP() should return code of 2 when given an unparseable URL")
+	}
+}
+
+func TestCheckHTTPS(t *testing.T) {
+	httpsServer := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(""))
+	}))
+	defer httpsServer.Close()
+
+	// Code 200 w/ insecure true
+	_, code := CheckHTTP(httpsServer.URL, false, true, 1, "", "", "", "")
+	if code != statusCodeOK {
+		t.Error("CheckHTTP() should return code of 0 when on OK (200) response")
+	}
+
+	// Code 200 w/ insecure false
+	_, code = CheckHTTP(httpsServer.URL, false, false, 1, "", "", "", "")
+	if code == statusCodeCritical {
+		t.Error("CheckHTTP() should return code of 2 on invalid certificate")
 	}
 }
 
