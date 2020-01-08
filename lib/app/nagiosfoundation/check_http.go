@@ -1,6 +1,7 @@
 package nagiosfoundation
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -96,7 +97,7 @@ func evaluateExpression(actualValue interface{}, expression, path string) (int, 
 }
 
 // CheckHTTP attempts an HTTP request against the provided url, reporting the HTTP response code and overall request state.
-func CheckHTTP(url string, redirect bool, timeout int, format, path, expectedValue, expression string) (string, int) {
+func CheckHTTP(url string, redirect, insecure bool, timeout int, format, path, expectedValue, expression string) (string, int) {
 	const checkName = "CheckHttp"
 	var retCode int
 	var msg string
@@ -108,7 +109,7 @@ func CheckHTTP(url string, redirect bool, timeout int, format, path, expectedVal
 		return msg, 2
 	}
 
-	status, body, _ := statusCode(url, timeout, acceptText)
+	status, body, _ := statusCode(url, insecure, timeout, acceptText)
 
 	retCode, responseStateText := evaluateStatusCode(status, redirect)
 	responseCode := strconv.Itoa(status)
@@ -150,7 +151,7 @@ func CheckHTTP(url string, redirect bool, timeout int, format, path, expectedVal
 	return msg, retCode
 }
 
-func statusCode(url string, timeout int, accept string) (int, string, error) {
+func statusCode(url string, insecure bool, timeout int, accept string) (int, string, error) {
 	http.DefaultClient.Timeout = time.Duration(timeout) * time.Second
 
 	request, err := http.NewRequest("GET", url, nil)
@@ -159,6 +160,10 @@ func statusCode(url string, timeout int, accept string) (int, string, error) {
 	}
 
 	request.Header.Set("accept", accept)
+
+	if insecure {
+		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	}
 
 	response, err := http.DefaultTransport.RoundTrip(request)
 	if err != nil {

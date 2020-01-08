@@ -7,6 +7,7 @@ Performs an HTTP GET request and returns a result based on the HTTP response cod
 
 ## Options
 - `--url` (`-u`): The URL to check. Required.
+- `--insecure` (`-k`): Do not validate the server's certificate
 - `--redirect` (`-r`): If set, follow redirects. Default is do not follow redirects.
 - `--timeout` (`-t`): Timeout in seconds to wait for HTTP server response. Default is 15 seconds.
 - `--path` (`-p`) and `--expression`: Used together. A json path and expression value to compare. Use this rather than `--path` and `--expectedValue` for making comparisons.
