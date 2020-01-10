@@ -97,7 +97,7 @@ func evaluateExpression(actualValue interface{}, expression, path string) (int, 
 }
 
 // CheckHTTP attempts an HTTP request against the provided url, reporting the HTTP response code and overall request state.
-func CheckHTTP(url string, redirect, insecure bool, timeout int, format, path, expectedValue, expression string) (string, int) {
+func CheckHTTP(url string, redirect, insecure bool, host string, timeout int, format, path, expectedValue, expression string) (string, int) {
 	const checkName = "CheckHttp"
 	var retCode int
 	var msg string
@@ -109,7 +109,7 @@ func CheckHTTP(url string, redirect, insecure bool, timeout int, format, path, e
 		return msg, 2
 	}
 
-	status, body, _ := statusCode(url, insecure, timeout, acceptText)
+	status, body, _ := statusCode(url, insecure, timeout, acceptText, host)
 
 	retCode, responseStateText := evaluateStatusCode(status, redirect)
 	responseCode := strconv.Itoa(status)
@@ -151,7 +151,7 @@ func CheckHTTP(url string, redirect, insecure bool, timeout int, format, path, e
 	return msg, retCode
 }
 
-func statusCode(url string, insecure bool, timeout int, accept string) (int, string, error) {
+func statusCode(url string, insecure bool, timeout int, accept string, host string) (int, string, error) {
 	http.DefaultClient.Timeout = time.Duration(timeout) * time.Second
 
 	request, err := http.NewRequest("GET", url, nil)
@@ -160,6 +160,10 @@ func statusCode(url string, insecure bool, timeout int, accept string) (int, str
 	}
 
 	request.Header.Set("accept", accept)
+
+	if host != "" {
+		request.Host = host
+	}
 
 	if insecure {
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}

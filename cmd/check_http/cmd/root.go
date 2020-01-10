@@ -9,10 +9,10 @@ import (
 )
 
 // Execute runs the root command
-func Execute(apiCheckHTTP func(string, bool, bool, int, string, string, string, string) (string, int)) int {
+func Execute(apiCheckHTTP func(string, bool, bool, string, int, string, string, string, string) (string, int)) int {
 	var redirect, insecure bool
 	var exitCode, timeout int
-	var url, format, path, expectedValue, expression string
+	var url, format, path, expectedValue, expression, host string
 
 	var rootCmd = &cobra.Command{
 		Use:   "check_http",
@@ -20,7 +20,7 @@ func Execute(apiCheckHTTP func(string, bool, bool, int, string, string, string, 
 		Long:  `Perform an HTTP get request and assert whether it is OK, warning or critical.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.ParseFlags(os.Args)
-			msg, retval := apiCheckHTTP(url, redirect, insecure, timeout, format, path, expectedValue, expression)
+			msg, retval := apiCheckHTTP(url, redirect, insecure, host, timeout, format, path, expectedValue, expression)
 
 			fmt.Println(msg)
 			exitCode = retval
@@ -33,6 +33,7 @@ func Execute(apiCheckHTTP func(string, bool, bool, int, string, string, string, 
 	rootCmd.Flags().BoolVarP(&redirect, "redirect", "r", false, "follow redirects?")
 	rootCmd.Flags().BoolVarP(&insecure, "insecure", "k", false, "do not validate certificate")
 	rootCmd.Flags().IntVarP(&timeout, "timeout", "t", 15, "timeout in seconds")
+	rootCmd.Flags().StringVarP(&host, "host", "H", "", "The host header for the request")
 	rootCmd.Flags().StringVarP(&format, "format", "f", "", "The expected response format: json")
 	rootCmd.Flags().StringVarP(&path, "path", "p", "", "The path in the return value data to test against the expected value")
 	rootCmd.Flags().StringVarP(&expectedValue, "expectedValue", "e", "", "The expected response data value")
