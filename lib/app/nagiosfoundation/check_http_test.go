@@ -29,6 +29,13 @@ func TestCheckHTTP(t *testing.T) {
 		t.Error("CheckHTTP() should return code of 0 when on OK (200) response")
 	}
 
+	// Code 200 with
+	httpStatus = http.StatusOK
+	_, code = CheckHTTP(httpServer.URL, false, false, "www.google.com", 1, format, path, expectedValue, "")
+	if code != 0 {
+		t.Error("CheckHTTP() should return code of 0 when on OK (200) response given google.com as a header.")
+	}
+
 	// Code 400
 	httpStatus = http.StatusBadRequest
 	_, code = CheckHTTP(httpServer.URL, false, false, "", 1, format, path, expectedValue, "")
