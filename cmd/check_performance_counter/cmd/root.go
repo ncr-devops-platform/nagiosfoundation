@@ -14,7 +14,7 @@ import (
 func Execute() {
 	var greaterThan bool
 	var warning, critical float64
-	var pollingAttempty_cntrs, pollingDelay int
+	var pollingAttempts, pollingDelay int
 	var metricName string
 	var counterName []string
 	var finalretval int
@@ -31,7 +31,7 @@ The defaults for this check have the --critical and --warning values set to 0, a
 retrieved is compared to be lesser than those values. Generally a counter value will be > 0, causing
 this check to emit an OK response when using these defaults.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			// cmd.ParseFlags(os.Args)
+			//cmd.ParseFlags(os.Args)
 
 			if len(counterName) != 0 && !(len(counterName) > 1 && (metricName != "" || warning != 0 || critical != 0 || greaterThan)) {
 				var empty_cntr bool
@@ -42,7 +42,7 @@ this check to emit an OK response when using these defaults.`,
 						empty_cntr = true
 						continue
 					}
-					msg, retval := nagiosfoundation.CheckPerformanceCounter(warning, critical, greaterThan, pollingAttempty_cntrs,
+					msg, retval := nagiosfoundation.CheckPerformanceCounter(warning, critical, greaterThan, pollingAttempts,
 						pollingDelay, metricName, counter)
 					fmt.Println(msg)
 					if finalretval < retval {
@@ -70,7 +70,7 @@ this check to emit an OK response when using these defaults.`,
 	rootCmd.Flags().Float64VarP(&warning, "warning", "w", 0.0, "the threshold to issue a warning alert")
 	rootCmd.Flags().Float64VarP(&critical, "critical", "c", 0.0, "the threshold to issue a critical alert")
 	rootCmd.Flags().BoolVarP(&greaterThan, "greater_than", "g", false, "issue warnings if the metric is greater than the expected thresholds (default false)")
-	rootCmd.Flags().IntVarP(&pollingAttempty_cntrs, "polling_attempty_cntrs", "a", 2, "the number of times to fetch and average the performance counter")
+	rootCmd.Flags().IntVarP(&pollingAttempts, "polling_attempts", "a", 2, "the number of times to fetch and average the performance counter")
 	rootCmd.Flags().IntVarP(&pollingDelay, "polling_delay", "d", 1, "the number of seconds to delay between polling attempty_cntrs")
 
 	if err := rootCmd.Execute(); err != nil {
