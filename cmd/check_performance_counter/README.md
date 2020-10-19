@@ -10,12 +10,21 @@ The defaults for this check have the `--critical` and `--warning` values set to 
 * `--polling_attempts (-a)`: The number of times to attempt retrieval of the Performance Counter. Default is `2`.
 * `--polling_delay (-d)`: The delay, in seconds, between polling attempts. Default is `1`.
 * `--metric_name (-m)`: String output in the response message in a Nagios format and is suitable for machine parsing. There is no default.
+* `--multiple_counters (-M)`: This attribute takes multiple inputs i.e., multiple commands for the performance counter. This displays the values for the commands passed. This is used just for data retrieval, `--warning` and `--critical` values are not defined.
 
 ## Examples
 Specify only the required counter name
 ```
 check_performance_counter --counter_name "\IPv4\Datagrams/sec"
 ```
+
+## Example for passing multiple inputs for performance counter
+
+Pass all the commands for which you want to get the data
+```
+check_performance_counter -M "\LogicalDisk(C:)\% Free Space, \LogicalDisk(C:)\FreeMegaBytes, \system\system up time, \TCPv4\ConnectionsEstablished"
+```
+This will print us the data(values) for the above commands in the order.
 
 ## Helpful Hints
 To get a list of Performance Counters available on a system use
