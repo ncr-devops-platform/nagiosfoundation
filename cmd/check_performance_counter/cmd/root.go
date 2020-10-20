@@ -31,8 +31,6 @@ The defaults for this check have the --critical and --warning values set to 0, a
 retrieved is compared to be lesser than those values. Generally a counter value will be > 0, causing
 this check to emit an OK response when using these defaults.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			//cmd.ParseFlags(os.Args)
-
 			if len(counterName) != 0 && !(len(counterName) > 1 && (metricName != "" || warning != 0 || critical != 0 || greaterThan)) {
 				var empty_cntr bool
 				empty_cntr = false
