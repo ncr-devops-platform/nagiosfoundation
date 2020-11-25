@@ -125,3 +125,41 @@ func TestCpu(t *testing.T) {
 	// Execute to at least make sure there's no panic
 	getStatsDataService()
 }
+
+func Test_average(t *testing.T) {
+	type args struct {
+		input []float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want float64
+	}{
+		{
+			name: "Average",
+			args: args{
+				input: []float64{
+					5,
+					10,
+					14.8,
+					30,
+				},
+			},
+			want: 14.95,
+		},
+		{
+			name: "Zero",
+			args: args{
+				input: []float64{},
+			},
+			want: 0.0,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := average(tt.args.input); got != tt.want {
+				t.Errorf("average() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
