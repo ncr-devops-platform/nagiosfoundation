@@ -17,6 +17,8 @@ A suite of Nagios style checks and metrics covering the basic needs for monitori
 * [Service](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_service/README.md)
 * [Uptime](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_uptime/README.md)
 * [User and Group](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_user_group/README.md)
+* [Process CPU](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_process_cpu/README.md)
+* [Process Memory](https://github.com/ncr-devops-platform/nagios-foundation/blob/master/cmd/check_process_memory/README.md)
 
 ## Using
 Use this collection of applications as [Sensu Go Checks](https://docs.sensu.io/sensu-go/5.5/reference/checks/) in your Sensu deployment. For example, to check every 60 seconds that the signage application is running on a remote kiosk where the Sensu Agent is subscribed to `signage`, run:

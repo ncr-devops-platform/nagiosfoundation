@@ -8,6 +8,20 @@ import (
 	"time"
 )
 
+func average(input []float64) float64 {
+	count := len(input)
+	if count <= 0.0 {
+		return 0.0
+	}
+
+	sum := float64(0.0)
+	for _, value := range input {
+		sum += value
+	}
+
+	return sum / float64(count)
+}
+
 func getStats(getStatsData func() (string, error)) ([]float64, error) {
 	if getStatsData == nil {
 		return []float64{}, errors.New("No stats data handler given")
@@ -84,4 +98,10 @@ func getCPULoadLinux() (float64, error) {
 // GetCPULoad returns the current CPU load as a percentage.
 func GetCPULoad() (float64, error) {
 	return getCPULoadOsConstrained()
+}
+
+// GetProcessCPULoad returns the current CPU load of a process as a percentage (normalized for core count).
+// If perCoreCalculation is true, then reports highest used core utilization instead (Linux only).
+func GetProcessCPULoad(processName string, perCoreCalculation bool) (float64, error) {
+	return getProcessCPULoadOsConstrained(processName, perCoreCalculation)
 }

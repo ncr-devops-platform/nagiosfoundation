@@ -105,3 +105,8 @@ func getUsedMemoryPercentageWithHandlers(totalMemory func() uint64, freeMemory f
 func GetUsedMemoryPercentage() uint64 {
 	return getUsedMemoryPercentageWithHandlers(m.TotalMemory, getFreeMemoryOsConstrained)
 }
+
+// GetProcessMemoryPercentage returns the percentage of used memory of a process against total system memory.
+func GetProcessMemoryPercentage(processName string) (float64, error) {
+	return getProcessMemoryPercentageOsContrained(processName)
+}
