@@ -1,4 +1,44 @@
 products:
+  check_process_cpu:
+    build:
+      main-pkg: 'cmd/check_process_cpu'
+      build-args-script: scripts/inject-name-version.sh
+      os-archs:
+        - os: windows
+          arch: amd64
+        - os: windows
+          arch: "386"
+        - os: linux
+          arch: amd64
+        - os: linux
+          arch: "386"
+    dist:
+        disters:
+          type: os-arch-bin
+          config:
+            os-archs:
+              - os: windows
+                arch: amd64
+  check_process_memory:
+    build:
+      main-pkg: 'cmd/check_process_memory'
+      build-args-script: scripts/inject-name-version.sh
+      os-archs:
+        - os: windows
+          arch: amd64
+        - os: windows
+          arch: "386"
+        - os: linux
+          arch: amd64
+        - os: linux
+          arch: "386"
+    dist:
+        disters:
+          type: os-arch-bin
+          config:
+            os-archs:
+              - os: windows
+                arch: amd64
   check_memory:
     build:
       main-pkg: 'cmd/check_memory'
