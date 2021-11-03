@@ -1,0 +1,22 @@
+name: Testing
+
+on:
+  pull_request:
+
+jobs:
+  testing:
+    name: Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      # --------- Initializing Tools ------------
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+        with: 
+          ref: ${{ github.event.pull_request.head.sha }}
+          submodules: true
+
+      - name: Go Version
+        id: version
+        run: |
+            go version
