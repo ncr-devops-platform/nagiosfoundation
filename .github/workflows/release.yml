@@ -1,7 +1,9 @@
 name: Release
 
 on:
-  pull_request:
+  push:
+    tags:
+      - *
 
 jobs:
   test:
@@ -17,7 +19,11 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Test
+    - name: VersionCheck
+      run: |
+        ./godelw version
+        ./godelw project-version
+    - name: Package
       run: |
         make clean
         make package
