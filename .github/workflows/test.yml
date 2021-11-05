@@ -18,7 +18,5 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Test
-      env:
-        CGO_ENABLED: 0
       run: |
         make test
