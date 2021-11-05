@@ -23,7 +23,7 @@ jobs:
       run: |
         ./godelw version
         ./godelw project-version
-        echo "::set-output name=tag_name::CI-$(./godelw project-version)"
+        echo "::set-output name=tag_name::$(./godelw project-version)"
     - name: Package
       run: |
         make clean
