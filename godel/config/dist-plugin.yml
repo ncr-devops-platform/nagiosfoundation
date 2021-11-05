@@ -2,6 +2,8 @@ products:
   check_process_cpu:
     build:
       main-pkg: 'cmd/check_process_cpu'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -22,6 +24,8 @@ products:
   check_process_memory:
     build:
       main-pkg: 'cmd/check_process_memory'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -42,6 +46,8 @@ products:
   check_memory:
     build:
       main-pkg: 'cmd/check_memory'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -62,6 +68,8 @@ products:
   check_cpu:
     build:
       main-pkg: 'cmd/check_cpu'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -82,6 +90,8 @@ products:
   check_file_exists:
     build:
       main-pkg: 'cmd/check_file_exists'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -102,6 +112,8 @@ products:
   check_performance_counter:
     build:
       main-pkg: 'cmd/check_performance_counter'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -118,6 +130,8 @@ products:
   check_service:
     build:
       main-pkg: 'cmd/check_service'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -138,6 +152,8 @@ products:
   check_user_group:
     build:
       main-pkg: 'cmd/check_user_group'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -158,6 +174,8 @@ products:
   check_process:
     build:
       main-pkg: 'cmd/check_process'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -178,6 +196,8 @@ products:
   check_http:
     build:
       main-pkg: 'cmd/check_http'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -198,6 +218,8 @@ products:
   check_uptime:
     build:
       main-pkg: 'cmd/check_uptime'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
@@ -218,6 +240,8 @@ products:
   check_port:
     build:
       main-pkg: 'cmd/check_port'
+      environment:
+        CGO_ENABLED: "0"
       build-args-script: scripts/inject-name-version.sh
       os-archs:
         - os: windows
