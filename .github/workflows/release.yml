@@ -20,6 +20,7 @@ jobs:
       uses: actions/checkout@v2
     - name: VersionCheck
       id: versions
+      continue-on-error: true
       run: |
         ./godelw version
         ./godelw project-version
