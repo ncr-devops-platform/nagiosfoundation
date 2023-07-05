@@ -65,8 +65,8 @@ func systemdServiceTest(serviceName string, currentStateWanted bool) (string, in
 	msg := fmt.Sprintf("%s %s - %s%s", serviceCheckName, responseStateText, info, actualInfo)
 
 	if currentStateWanted {
-		msg = msg + fmt.Sprintf(" | service_state=%d service_name=%s",
-			serviceState, serviceName)
+		msg = msg + fmt.Sprintf(" | service_state_%s=%d",
+			serviceName, serviceState)
 		retcode = 0
 	}
 
