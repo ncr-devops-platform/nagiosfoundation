@@ -26,6 +26,7 @@ jobs:
         ./godelw project-version
         echo "::set-output name=tag_name::$(./godelw project-version)"
     - name: Package
+      continue-on-error: true
       run: |
         make clean
         make package
