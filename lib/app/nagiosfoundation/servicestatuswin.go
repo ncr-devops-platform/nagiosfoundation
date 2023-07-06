@@ -198,7 +198,7 @@ func checkServiceOsConstrained(name string, state string, user string, currentSt
 			desiredUser:        user,
 			currentStateWanted: currentStateWanted,
 			getServiceInfo:     managers[manager],
-			metricName:	        metricName
+			metricName:	        metricName,
 		}
 
 		err := i.GetInfo()
