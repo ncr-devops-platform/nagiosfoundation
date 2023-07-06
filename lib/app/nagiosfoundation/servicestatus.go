@@ -23,6 +23,9 @@ type serviceInfo struct {
 	// User only wants current state
 	currentStateWanted bool
 
+	// The name of the outputted metric
+	metricName string
+
 	actualName      string
 	actualStateText string
 	actualStateNbr  int
@@ -95,7 +98,7 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 	if !i.IsName(i.desiredName) {
 		if i.currentStateWanted == true {
 			checkInfo = fmt.Sprintf("%s does not exist", i.desiredName)
-			nagiosInfo = fmt.Sprintf("service_state_%s=255", i.desiredName)
+			nagiosInfo = fmt.Sprintf("%s=255 service_name=%s", i.metricName, i.desiredName)
 			retcode = 0
 		} else {
 			checkInfo = fmt.Sprintf("%s does not exist", i.desiredName)
@@ -103,7 +106,7 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 		}
 	} else if i.currentStateWanted == true {
 		checkInfo = fmt.Sprintf("%s is in a %s state", i.desiredName, i.ActualStateText())
-		nagiosInfo = fmt.Sprintf("service_state_%s=%d", i.desiredName, i.ActualStateNbr())
+		nagiosInfo = fmt.Sprintf("%s=%d service_name=%s", i.metricName, i.ActualStateNbr(), i.desiredName)
 		retcode = 0
 	} else if i.desiredState != "" && i.desiredUser != "" {
 		if i.IsState(i.desiredState) && i.IsUser(i.desiredUser) {
@@ -159,6 +162,6 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 
 // CheckService checks a service based on name, state,
 // user, and manager
-func CheckService(name, state, user string, currentStateWanted bool, manager string) (string, int) {
-	return checkServiceOsConstrained(name, state, user, currentStateWanted, manager)
+func CheckService(name, state, user string, currentStateWanted bool, manager string, metricName string) (string, int) {
+	return checkServiceOsConstrained(name, state, user, currentStateWanted, manager, metricName)
 }

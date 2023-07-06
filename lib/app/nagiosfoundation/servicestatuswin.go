@@ -168,7 +168,7 @@ func getInfoSvcMgr(name string) (string, string, string, int, error) {
 	return serviceName, serviceStartName, serviceStateText, serviceStateNbr, err
 }
 
-func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, manager string) (string, int) {
+func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, manager string, metricName string) (string, int) {
 	managers := make(map[string]getServiceInfoFunc)
 	managers["wmi"] = getInfoWmi
 	managers["svcmgr"] = getInfoSvcMgr
@@ -198,6 +198,7 @@ func checkServiceOsConstrained(name string, state string, user string, currentSt
 			desiredUser:        user,
 			currentStateWanted: currentStateWanted,
 			getServiceInfo:     managers[manager],
+			metricName:	    metricName,
 		}
 
 		err := i.GetInfo()
