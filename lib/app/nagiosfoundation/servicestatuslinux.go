@@ -73,17 +73,6 @@ func systemdServiceTest(serviceName string, currentStateWanted bool, metricName 
 	return msg, retcode
 }
 
-func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, manager string, metricName string) (string, int) {
-	var msg string
-	var retcode int
-
-	switch manager {
-	case "systemd":
-		msg, retcode = systemdServiceTest(name, currentStateWanted, metricName)
-	default:
-		msg = fmt.Sprintf("%s CRITICAL - %s is not a valid service manager.", serviceCheckName, manager)
-		retcode = 2
-	}
-
-	return msg, retcode
+func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, useSvcMgr bool, metricName string) (string, int) {
+	return systemdServiceTest(name, currentStateWanted, metricName)
 }

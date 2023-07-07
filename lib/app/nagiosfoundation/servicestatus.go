@@ -162,6 +162,6 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 
 // CheckService checks a service based on name, state,
 // user, and manager
-func CheckService(name, state, user string, currentStateWanted bool, manager string, metricName string) (string, int) {
-	return checkServiceOsConstrained(name, state, user, currentStateWanted, manager, metricName)
+func CheckService(name, state, user string, currentStateWanted bool, useSvcMgr bool, metricName string) (string, int) {
+	return checkServiceOsConstrained(name, state, user, currentStateWanted, useSvcMgr, metricName)
 }
