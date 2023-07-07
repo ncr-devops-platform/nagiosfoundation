@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const serviceManagerFlag = "use_svc_mgr"
+const serviceManagerFlag = "win_svc_mgr"
 const currentStateWantedFlag = "current_state"
 
 var state, user, metricName string
