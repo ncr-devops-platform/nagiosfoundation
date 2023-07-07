@@ -176,35 +176,22 @@ func checkServiceOsConstrained(name string, state string, user string, currentSt
 	var msg string
 	var retcode int
 
-	if _, ok := managers[useSvcMgr]; !ok {
-		managersList := ""
-		for key, _ := range managers {
-			if managersList != "" {
-				managersList = managersList + ", "
-			}
-			managersList = managersList + "\"" + key + "\""
-		}
+	i := serviceInfo{
+		desiredName:        name,
+		desiredState:       state,
+		desiredUser:        user,
+		currentStateWanted: currentStateWanted,
+		getServiceInfo:     managers[useSvcMgr],
+		metricName:	    metricName,
+	}
 
-		msg = fmt.Sprintf("%s CRITICAL - Service manager \"%s\" not valid. Valid managers are %s.", serviceCheckName, manager, managersList)
+	err := i.GetInfo()
+
+	if err != nil {
+		msg = fmt.Sprintf("%s CRITICAL - %s", serviceCheckName, err)
 		retcode = 2
 	} else {
-		i := serviceInfo{
-			desiredName:        name,
-			desiredState:       state,
-			desiredUser:        user,
-			currentStateWanted: currentStateWanted,
-			getServiceInfo:     managers[useSvcMgr],
-			metricName:	    metricName,
-		}
-
-		err := i.GetInfo()
-
-		if err != nil {
-			msg = fmt.Sprintf("%s CRITICAL - %s", serviceCheckName, err)
-			retcode = 2
-		} else {
-			msg, retcode = i.ProcessInfo()
-		}
+		msg, retcode = i.ProcessInfo()
 	}
 
 	return msg, retcode
