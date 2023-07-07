@@ -168,19 +168,15 @@ func getInfoSvcMgr(name string) (string, string, string, int, error) {
 	return serviceName, serviceStartName, serviceStateText, serviceStateNbr, err
 }
 
-func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, manager string, metricName string) (string, int) {
-	managers := make(map[string]getServiceInfoFunc)
-	managers["wmi"] = getInfoWmi
-	managers["svcmgr"] = getInfoSvcMgr
-
-	if manager == "" {
-		manager = "wmi"
-	}
+func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, useSvcMgr bool, metricName string) (string, int) {
+	managers := make(map[bool]getServiceInfoFunc)
+	managers[false] = getInfoWmi
+	managers[true] = getInfoSvcMgr
 
 	var msg string
 	var retcode int
 
-	if _, ok := managers[manager]; !ok {
+	if _, ok := managers[useSvcMgr]; !ok {
 		managersList := ""
 		for key, _ := range managers {
 			if managersList != "" {
@@ -197,7 +193,7 @@ func checkServiceOsConstrained(name string, state string, user string, currentSt
 			desiredState:       state,
 			desiredUser:        user,
 			currentStateWanted: currentStateWanted,
-			getServiceInfo:     managers[manager],
+			getServiceInfo:     managers[useSvcMgr],
 			metricName:	    metricName,
 		}
 
