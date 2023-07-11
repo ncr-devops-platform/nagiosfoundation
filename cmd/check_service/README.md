@@ -13,10 +13,11 @@ This check supports
 
 The functionality depends on the command line flags used and can be easily inferred based on the flags present.
 * `--name (-n)` : The service name. Required.
-* `--current-state (-c)` : Output the service state in nagios output
+* `--current-state (-c)` : Output the service state in nagios output.
+* `--metric-name (-m)` : The outputted metric name. Default is `service_state`.
 
 ### Service Running
-To verify a service is running, use the `--name (-n)` option. Note that `--name (-n)` is required and the `--manager` defaults to `systemd`.
+To verify a service is running, use the `--name (-n)` option. Note that `--name (-n)` is required.
 ```
 check_service --name sshd
 ```
@@ -42,6 +43,13 @@ $ check_service --name sshd --current_state
 CheckService CRITICAL - sshd not in a running state (State: inactive) | service_state=0 service_name=sshd
 ```
 
+**Service Running, Metric Name Changed**
+
+```
+$ check_service --name sshd --current_state --metric_name sshd_state
+CheckService OK - sshd in a running state | sshd_state=1 service_name=sshd
+```
+
 ### Windows
 Various states are supported and the `--state (-s)` flag is used to specify them. The default is to check that the service exists.
 ```
@@ -58,12 +66,13 @@ The Windows version of this check supports several additional features.
 
 The functionality depends on the command line flags used and can be easily inferred based on the flags present.
 * `--name (-n)` : The service name. Required.
-* `--state (-s)` : Validate the service is in the named state
+* `--state (-s)` : Validate the service is in the named state.
 * `--user (-u)` : Validate the service is started by the named user.
-* `--current-state (-c)` : Output the Windows service state in nagios output
-* `--manager (-m)` : Specify a service manager. `wmi` and `svcmgr` are supported. The default is `wmi`.
+* `--current-state (-c)` : Output the Windows service state in nagios output.
+* `--win_svc_mgr (-w)` : Set to `true` to use Windows Control Manager. Default is `false` which uses WMI.
+* `--metric-name (-m)` : The outputted metric name. Default is `service_state`.
 
-## Windows Service Manager
+## Windows Control Manager
 The Windows version of this check supports two methods of retrieving service data.
 
 **`wmi`**: Uses [Windows Management Instrumentation](https://docs.microsoft.com/en-us/windows/desktop/wmisdk/wmi-start-page) to retrieve service data. This method does not require any special user privileges and is the default.
