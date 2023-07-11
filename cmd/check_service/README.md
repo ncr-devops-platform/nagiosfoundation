@@ -46,8 +46,8 @@ CheckService CRITICAL - sshd not in a running state (State: inactive) | service_
 **Service Running, Metric Name Changed**
 
 ```
-$ check_service --name sshd --current_state --metric_name sshd_state
-CheckService OK - sshd in a running state | sshd_state=1 service_name=sshd
+$ check_service --name sshd --current_state --metric_name sshd_service_state
+CheckService OK - sshd in a running state | sshd_service_state=1 service_name=sshd
 ```
 
 ### Windows
