@@ -72,7 +72,7 @@ The functionality depends on the command line flags used and can be easily infer
 * `--win_svc_mgr (-w)` : Set to `true` to use Windows Control Manager. Default is `false` which uses WMI.
 * `--metric-name (-m)` : The outputted metric name. Default is `service_state`.
 
-## Windows Control Manager
+## Windows Service Manager
 The Windows version of this check supports two methods of retrieving service data.
 
 **`wmi`**: Uses [Windows Management Instrumentation](https://docs.microsoft.com/en-us/windows/desktop/wmisdk/wmi-start-page) to retrieve service data. This method does not require any special user privileges and is the default.
