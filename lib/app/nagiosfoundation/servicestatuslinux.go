@@ -27,7 +27,7 @@ func getInfoOsConstrained(name string) (string, string, string, error) {
 	return "", "", "", nil
 }
 
-func systemdServiceTest(serviceName string, currentStateWanted bool) (string, int) {
+func systemdServiceTest(serviceName string, currentStateWanted bool, metricName string) (string, int) {
 	cmd := exec.Command("systemctl", "check", serviceName)
 	out, err := cmd.CombinedOutput()
 	state := strings.TrimSpace(string(out))
@@ -65,25 +65,14 @@ func systemdServiceTest(serviceName string, currentStateWanted bool) (string, in
 	msg := fmt.Sprintf("%s %s - %s%s", serviceCheckName, responseStateText, info, actualInfo)
 
 	if currentStateWanted {
-		msg = msg + fmt.Sprintf(" | service_state=%d service_name=%s",
-			serviceState, serviceName)
+		msg = msg + fmt.Sprintf(" | %s=%d service_name=%s",
+			metricName, serviceState, serviceName)
 		retcode = 0
 	}
 
 	return msg, retcode
 }
 
-func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, manager string) (string, int) {
-	var msg string
-	var retcode int
-
-	switch manager {
-	case "systemd":
-		msg, retcode = systemdServiceTest(name, currentStateWanted)
-	default:
-		msg = fmt.Sprintf("%s CRITICAL - %s is not a valid service manager.", serviceCheckName, manager)
-		retcode = 2
-	}
-
-	return msg, retcode
+func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, useSvcMgr bool, metricName string) (string, int) {
+	return systemdServiceTest(name, currentStateWanted, metricName)
 }

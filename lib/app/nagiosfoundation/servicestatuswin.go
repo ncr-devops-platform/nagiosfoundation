@@ -168,46 +168,30 @@ func getInfoSvcMgr(name string) (string, string, string, int, error) {
 	return serviceName, serviceStartName, serviceStateText, serviceStateNbr, err
 }
 
-func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, manager string) (string, int) {
-	managers := make(map[string]getServiceInfoFunc)
-	managers["wmi"] = getInfoWmi
-	managers["svcmgr"] = getInfoSvcMgr
-
-	if manager == "" {
-		manager = "wmi"
-	}
+func checkServiceOsConstrained(name string, state string, user string, currentStateWanted bool, useSvcMgr bool, metricName string) (string, int) {
+	managers := make(map[bool]getServiceInfoFunc)
+	managers[false] = getInfoWmi
+	managers[true] = getInfoSvcMgr
 
 	var msg string
 	var retcode int
 
-	if _, ok := managers[manager]; !ok {
-		managersList := ""
-		for key, _ := range managers {
-			if managersList != "" {
-				managersList = managersList + ", "
-			}
-			managersList = managersList + "\"" + key + "\""
-		}
+	i := serviceInfo{
+		desiredName:        name,
+		desiredState:       state,
+		desiredUser:        user,
+		currentStateWanted: currentStateWanted,
+		getServiceInfo:     managers[useSvcMgr],
+		metricName:	    metricName,
+	}
 
-		msg = fmt.Sprintf("%s CRITICAL - Service manager \"%s\" not valid. Valid managers are %s.", serviceCheckName, manager, managersList)
+	err := i.GetInfo()
+
+	if err != nil {
+		msg = fmt.Sprintf("%s CRITICAL - %s", serviceCheckName, err)
 		retcode = 2
 	} else {
-		i := serviceInfo{
-			desiredName:        name,
-			desiredState:       state,
-			desiredUser:        user,
-			currentStateWanted: currentStateWanted,
-			getServiceInfo:     managers[manager],
-		}
-
-		err := i.GetInfo()
-
-		if err != nil {
-			msg = fmt.Sprintf("%s CRITICAL - %s", serviceCheckName, err)
-			retcode = 2
-		} else {
-			msg, retcode = i.ProcessInfo()
-		}
+		msg, retcode = i.ProcessInfo()
 	}
 
 	return msg, retcode
