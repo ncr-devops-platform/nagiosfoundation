@@ -156,7 +156,7 @@ func TestActualIs(t *testing.T) {
 
 	si.desiredName = badName
 	msg, retcode = si.ProcessInfo()
-	if retcode != 0 {
+	if retcode != 2 {
 		t.Errorf("ProcessInfo() failed when fetching current state for unknown service")
 	}
 
