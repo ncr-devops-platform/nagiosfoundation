@@ -72,6 +72,9 @@ The functionality depends on the command line flags used and can be easily infer
 * `--win_svc_mgr (-w)` : Set to `true` to use Windows Control Manager. Default is `false` which uses WMI.
 * `--metric-name (-m)` : The outputted metric name. Default is `service_state`.
 
+#### Note regarding `--current_state` flag
+By default, `--current_state` will always exit with a return code of `0`. To return a failing state with return code `2`, use the `--state` flag alongside `--current_state` and specify the desired state. When using both flags, the return code will be `0` if the service is in the desired state (running, stopped, etc). Otherwise, it will be `2`.
+
 ## Windows Service Manager
 The Windows version of this check supports two methods of retrieving service data.
 
