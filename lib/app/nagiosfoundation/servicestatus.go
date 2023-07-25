@@ -96,18 +96,19 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 	)
 
 	if !i.IsName(i.desiredName) {
-		if i.currentStateWanted == true {
-			checkInfo = fmt.Sprintf("%s does not exist", i.desiredName)
+		if i.currentStateWanted {
 			nagiosInfo = fmt.Sprintf("%s=255 service_name=%s", i.metricName, i.desiredName)
-			retcode = 0
-		} else {
-			checkInfo = fmt.Sprintf("%s does not exist", i.desiredName)
-			retcode = 2
 		}
-	} else if i.currentStateWanted == true {
+		checkInfo = fmt.Sprintf("%s does not exist", i.desiredName)
+		retcode = 2
+	} else if i.currentStateWanted {
 		checkInfo = fmt.Sprintf("%s is in a %s state", i.desiredName, i.ActualStateText())
 		nagiosInfo = fmt.Sprintf("%s=%d service_name=%s", i.metricName, i.ActualStateNbr(), i.desiredName)
-		retcode = 0
+		if i.desiredState != "" && !i.IsState(i.desiredState) {
+			retcode = 2
+		} else {
+			retcode = 0
+		}
 	} else if i.desiredState != "" && i.desiredUser != "" {
 		if i.IsState(i.desiredState) && i.IsUser(i.desiredUser) {
 			checkInfo = fmt.Sprintf("%s in a %s state and started by user %s",
