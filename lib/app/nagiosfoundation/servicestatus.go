@@ -98,9 +98,11 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 	if !i.IsName(i.desiredName) {
 		if i.currentStateWanted {
 			nagiosInfo = fmt.Sprintf("%s=255 service_name=%s", i.metricName, i.desiredName)
+			retcode = 0
+		} else {
+			retcode = 2
 		}
 		checkInfo = fmt.Sprintf("%s does not exist", i.desiredName)
-		retcode = 2
 	} else if i.currentStateWanted {
 		checkInfo = fmt.Sprintf("%s is in a %s state", i.desiredName, i.ActualStateText())
 		nagiosInfo = fmt.Sprintf("%s=%d service_name=%s", i.metricName, i.ActualStateNbr(), i.desiredName)
