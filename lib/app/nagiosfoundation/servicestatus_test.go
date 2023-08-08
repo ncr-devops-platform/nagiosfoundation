@@ -160,6 +160,12 @@ func TestActualIs(t *testing.T) {
 		t.Errorf("ProcessInfo() failed when fetching current state for unknown service")
 	}
 
+	si.desiredState = goodState
+	msg, retcode = si.ProcessInfo()
+	if retcode != 2 {
+		t.Errorf("ProcessInfo() failed when fetching current state for unknown service with good service provided")
+	}
+
 	si.getServiceInfo = nil
 	err = si.GetInfo()
 	if err == nil {
