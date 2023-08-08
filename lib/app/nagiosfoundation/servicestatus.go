@@ -96,9 +96,13 @@ func (i *serviceInfo) ProcessInfo() (string, int) {
 	)
 
 	if !i.IsName(i.desiredName) {
-		if i.currentStateWanted && i.desiredState == "" {
+		if i.currentStateWanted {
 			nagiosInfo = fmt.Sprintf("%s=255 service_name=%s", i.metricName, i.desiredName)
-			retcode = 0
+			if i.desiredState == "" {
+				retcode = 0
+			} else {
+				retcode = 2
+			}
 		} else {
 			retcode = 2
 		}
