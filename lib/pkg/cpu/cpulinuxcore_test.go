@@ -80,6 +80,18 @@ func Test_parsePIDStatLine(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "ValidElementCount",
+			args: args{
+				line: " 1 2 3 4 5 6 7 8 9 10 11",
+			},
+			want: &pidStatLine{
+				TID:  4,
+				CPU:  9,
+				Core: 10,
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
