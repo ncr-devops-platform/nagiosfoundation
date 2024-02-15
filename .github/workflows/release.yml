@@ -28,6 +28,8 @@ jobs:
       run: |
         make clean
         make package
+    - name: Install hub
+      run: sudo apt install hub
     - name: Upload Release Asset(s)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
