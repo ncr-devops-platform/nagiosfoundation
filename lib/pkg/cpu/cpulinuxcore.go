@@ -223,12 +223,3 @@ func getProcessCoreCPULoad(processInfo []process.GeneralInfo) (float64, error) {
 
 	return max, nil
 }
-
-
-for j := range columns {
-	if columns[j] == "%wait" {
-		// Remove the "%wait" column
-		columns = append(columns[:j], columns[j+1:]...)
-		break
-	}
-}
