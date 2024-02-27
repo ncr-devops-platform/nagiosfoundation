@@ -30,9 +30,7 @@ jobs:
         make package
 
     - name: Install hub
-      run: |
-        sudo apt-get update
-        sudo apt-get install hub
+      run: sudo apt-get install hub
 
     - name: Upload Release Asset(s)
       env:
