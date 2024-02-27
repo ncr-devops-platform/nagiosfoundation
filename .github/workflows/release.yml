@@ -29,14 +29,14 @@ jobs:
         make clean
         make package
 
-    - name: Install Package
-      uses: ConorMacBride/install-package@v1.1.0
-      with:
-          brew: hub
+    - name: Install hub
+      run: |
+        sudo apt-get update
+        sudo apt-get install hub
 
     - name: Upload Release Asset(s)
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         assets=()
         for asset in ./out/package/*; do
