@@ -29,9 +29,15 @@ jobs:
         make clean
         make package
 
-    - name: Install hub
-      run: sudo apt-get install hub
+    - name: Install Homebrew
+      run: |
+        test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
+        test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bashrc
 
+    - name: Install hub
+      run: brew install hub
+            
     - name: Upload Release Asset(s)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
