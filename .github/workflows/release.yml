@@ -29,14 +29,10 @@ jobs:
         make clean
         make package
 
-    - name: Install Homebrew
+    - name: Install GitHub CLI
       run: |
-        sudo apt-get install build-essential procps curl file git
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
-        test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-        echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bashrc
-        
+          sudo apt update
+          sudo apt install gh
 
     - name: Install hub
       run: brew install hub
@@ -49,4 +45,5 @@ jobs:
         for asset in ./out/package/*; do
           assets+=("-a" "$asset")
         done
-        hub release edit "${assets[@]}" -m "" "${{ steps.versions.outputs.tag_name }}"
+        gh auth login --with-token ${{ secrets.GITHUB_TOKEN }}
+        gh release upload "${{ steps.versions.outputs.tag_name }}" "${assets[@]}"
