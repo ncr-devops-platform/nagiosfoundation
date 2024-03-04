@@ -92,6 +92,18 @@ func Test_parsePIDStatLine(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "ValidTID",
+			args: args{
+				line: " 1 2 3 177 5 6 7 8.5 3 10",
+			},
+			want: &pidStatLine{
+				TID:  177,
+				CPU:  8.5,
+				Core: 3,
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
