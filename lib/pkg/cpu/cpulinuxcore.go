@@ -104,6 +104,13 @@ func parsePIDStatLine(line string) (*pidStatLine, error) {
         cpuCoreValuesColumnIndex = 9
     }
 
+	tidStr := lineSplit[3]
+	fmt.Println("TID string:", tidStr) // This line is for debugging
+	tid, err := strconv.Atoi(tidStr)
+	if err != nil {
+    return nil, err
+	}
+	
     tid, err := strconv.Atoi(lineSplit[3])
     if err != nil {
         return nil, err
