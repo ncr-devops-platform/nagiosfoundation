@@ -38,8 +38,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        assets=()
-        for asset in ./out/package/*; do
-          assets+=("-a" "$asset")
+        for asset_file in ./out/package/*; do
+          gh release upload "${{ steps.versions.outputs.tag_name }}" "$asset_file" --clobber --token ${{ secrets.GITHUB_TOKEN }}
         done
-        gh release upload "${{ steps.versions.outputs.tag_name }}" "${assets[@]}" --token ${{ secrets.GITHUB_TOKEN }}
