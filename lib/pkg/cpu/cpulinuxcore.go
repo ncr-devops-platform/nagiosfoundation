@@ -1,3 +1,4 @@
+//go:build !windows
 // +build !windows
 
 package cpu
@@ -89,39 +90,41 @@ type pidStatLine struct {
 
 // parsePIDStatLine parses single PID stat line. See expected format below
 func parsePIDStatLine(line string) (*pidStatLine, error) {
-    // When 10 Fields: Time, UID, TGID, TID, %usr, %system, %guest, %CPU, CPU, Command
+	// When 10 Fields: Time, UID, TGID, TID, %usr, %system, %guest, %CPU, CPU, Command
 	// When 11 Fields: Time, UID, TGID, TID, %usr, %system, %guest, %wait, %CPU, CPU, Command
+	fmt.Println(line)
 	lineSplit := strings.Fields(line)
 	if len(lineSplit) != 10 && len(lineSplit) != 11 {
 		return nil, fmt.Errorf("Unexpected PID stat line. Expected at least 10 or 11 elements, actual %v", len(lineSplit))
 	}
 
-    cpuValuesColumnIndex := 7
-    cpuCoreValuesColumnIndex := 8
+	cpuValuesColumnIndex := 7
+	cpuCoreValuesColumnIndex := 8
 
-    if len(lineSplit) == 11 {
-        cpuValuesColumnIndex = 8
-        cpuCoreValuesColumnIndex = 9
-    }
+	if len(lineSplit) == 11 {
+		cpuValuesColumnIndex = 8
+		cpuCoreValuesColumnIndex = 9
+	}
 
-    tid, err := strconv.Atoi(lineSplit[3])
-    if err != nil {
-        return nil, err
-    }
-    cpuValue, err := strconv.ParseFloat(lineSplit[cpuValuesColumnIndex], 64)
-    if err != nil {
-        return nil, err
-    }
-    cpuCore, err := strconv.Atoi(lineSplit[cpuCoreValuesColumnIndex])
-    if err != nil {
-        return nil, err
-    }
+	tid, err := strconv.Atoi(lineSplit[3])
 
-    return &pidStatLine{
-        TID:  tid,
-        CPU:  cpuValue,
-        Core: cpuCore,
-    }, nil
+	if err != nil {
+		return nil, err
+	}
+	cpuValue, err := strconv.ParseFloat(lineSplit[cpuValuesColumnIndex], 64)
+	if err != nil {
+		return nil, err
+	}
+	cpuCore, err := strconv.Atoi(lineSplit[cpuCoreValuesColumnIndex])
+	if err != nil {
+		return nil, err
+	}
+
+	return &pidStatLine{
+		TID:  tid,
+		CPU:  cpuValue,
+		Core: cpuCore,
+	}, nil
 }
 
 // parsePIDStatSample attempts to parse given lines to PID Stat Lines.
