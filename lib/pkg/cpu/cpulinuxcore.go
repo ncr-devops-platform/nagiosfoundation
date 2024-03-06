@@ -107,11 +107,9 @@ func parsePIDStatLine(line string) (*pidStatLine, error) {
 	}
 
 	tidStr := lineSplit[3]
-	var tid int
+	tid := 0 // Default when value is undefined
 	var err error
-	if tidStr == "-" {
-		tid = 0 // Assign a default value of 0 for TID when '-' is encountered
-	} else {
+	if tidStr != "-" {
 		tid, err = strconv.Atoi(tidStr)
 		if err != nil {
 			return nil, err
