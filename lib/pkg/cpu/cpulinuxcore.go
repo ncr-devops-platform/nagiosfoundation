@@ -106,11 +106,18 @@ func parsePIDStatLine(line string) (*pidStatLine, error) {
 		cpuCoreValuesColumnIndex = 9
 	}
 
-	tid, err := strconv.Atoi(lineSplit[3])
-
-	if err != nil {
-		return nil, err
+	tidStr := lineSplit[3]
+	var tid int
+	var err error
+	if tidStr == "-" {
+		tid = 0.00 // Assign a default value of 0 for TID when '-' is encountered
+	} else {
+		tid, err = strconv.Atoi(tidStr)
+		if err != nil {
+			return nil, err
+		}
 	}
+
 	cpuValue, err := strconv.ParseFloat(lineSplit[cpuValuesColumnIndex], 64)
 	if err != nil {
 		return nil, err
