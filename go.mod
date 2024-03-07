@@ -9,7 +9,7 @@ require (
 	github.com/shirou/gopsutil v2.17.13-0.20180801053943-8048a2e9c577+incompatible
 	github.com/spf13/cobra v0.0.4-0.20190311125509-ba1052d4cbce
 	github.com/thedevsaddam/gojsonq v2.2.2+incompatible
-	golang.org/x/sys v0.0.0-20190219203350-90b0e4468f99
+	golang.org/x/sys v0.1.0
 )
 
 require (
