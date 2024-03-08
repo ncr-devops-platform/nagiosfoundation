@@ -92,7 +92,6 @@ type pidStatLine struct {
 func parsePIDStatLine(line string) (*pidStatLine, error) {
 	// When 10 Fields: Time, UID, TGID, TID, %usr, %system, %guest, %CPU, CPU, Command
 	// When 11 Fields: Time, UID, TGID, TID, %usr, %system, %guest, %wait, %CPU, CPU, Command
-	fmt.Println(line)
 	lineSplit := strings.Fields(line)
 	if len(lineSplit) != 10 && len(lineSplit) != 11 {
 		return nil, fmt.Errorf("Unexpected PID stat line. Expected at least 10 or 11 elements, actual %v", len(lineSplit))
